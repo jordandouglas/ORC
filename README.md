@@ -57,8 +57,8 @@ If you are not using BEAST 2.6 then replace 2.6 with the appropriate version num
 For more details see https://beast2.blogs.auckland.ac.nz/managing-packages/#Install_by_hand .
 
 
-## Automated generation of narrow exchange operators
-Run matlab/GenerateOperators.m using MatLab to generate all 53 / 63 solvable operators 
+## Automated generation of Narrow Exchange Rate operators
+Run matlab/GenerateOperators.m using MATLAB to generate all 47 solvable operators with non-zero Jacobians from the complete set of 63 (excluding narrow exchange)
 
 
 
