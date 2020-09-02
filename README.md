@@ -1,2 +1,2 @@
-# ADFP
-Adaptive dating and fast proposals (ADFP)
+# ORC
+Optimised Relaxed Clock
