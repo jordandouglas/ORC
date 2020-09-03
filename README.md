@@ -1,5 +1,5 @@
-# ORC
-Optimised Relaxed Clock
+# ORC - Optimised Relaxed Clock
+
 
 
 A BEAST2 package containing a series of optimisations made to improve the performance of the phylogenetic relaxed clock model. 
@@ -26,7 +26,7 @@ Both installation pathways assume you have BEAST2 already installed on your mach
 ![](figs/fig2.png)
 
 
-4. Import and alignment and set up the model as per usual
+4. Import an alignment and set up the model as per usual
 
 5. On the Clock Model tab, select 'Optimised Relaxed Clock' from the dropdown menu
 
