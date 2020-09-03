@@ -196,14 +196,14 @@
 		<copy todir="${Add_on_dir}">
 			<fileset file="version.xml"/>
 		</copy>
-		<!--
 		<copy todir="${Add_on_dir}/examples">
 			<fileset dir="examples" />
 		</copy>
-		-->
+		<!--
 		<copy todir="${Add_on_dir}/doc">
 			<fileset dir="doc" includes="ORC.pdf"/>
 		</copy>
+		-->
 		<copy todir="${Add_on_dir}/lib">
 			<fileset dir="${distORC}" includes="ORC.addon.jar" />
 		</copy>
