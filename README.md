@@ -4,7 +4,7 @@ Optimised Relaxed Clock
 
 ## Installation instructions
 
-### BEAUTI
+### BEAUti
 
 
 
