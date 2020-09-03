@@ -2,6 +2,11 @@
 Optimised Relaxed Clock
 
 
+A BEAST2 package containing a series of optimisations made to improve the performance of the phylogenetic relaxed clock model. 
+Depending on the dataset, the methods presented here can yield relaxed clock model mixing up to 65 times faster than the standard BEAST2 relaxed clock model setup.
+This gap widens as the alignment becomes longer making this package very effective at doing inference on long alignments.
+
+
 ## Installation instructions
 
 Both installation pathways assume you have BEAST2 already installed on your machine https://www.beast2.org/
