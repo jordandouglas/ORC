@@ -23,7 +23,16 @@ Both installation pathways assume you have BEAST2 already installed on your mach
 
 3. Install ORC
 
+If ORC is not in the list of packages, you may need to add an extra package repository as follows:
+
+* click the `packager repositories` button. A dialog pops up.
+* click the `Add URL` button. A dialog is shown where you can enter `https://raw.githubusercontent.com/CompEvol/CBAN/master/packages-extra.xml`
+* click the `OK` button. There should be an extra entry in the list.
+* click `Done`
+* After a short delay, the ORC package should appear in the list of packages.
+
 ![](figs/fig2.png)
+
 
 
 4. Import an alignment and set up the model as per usual
