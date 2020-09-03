@@ -135,7 +135,9 @@
 			<connect srcID='AdaptableOperatorSampler.NER.c:$(n)' targetID='mcmc' inputName='operator'
                      if='inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true and inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the tree of partition c:$(n) (Narrow Exchange Rates)
             </connect>
-		
+			
+			<!-- Destroy the standard narrow exchange operator -->
+			<connect method="orc.operators.MetaNEROperator.customConnector"/>
 
 
             <connect srcID='Tree.t:$(n)' targetID='OptimisedRelaxedClock.c:$(n)' inputName='tree' if='inlikelihood(OptimisedRelaxedClock.c:$(n))'/>

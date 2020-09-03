@@ -3,11 +3,21 @@ package orc.operators;
 import java.util.ArrayList;
 import java.util.List;
 
+import beast.app.beauti.BeautiDoc;
+import beast.core.BEASTInterface;
 import beast.core.Description;
+import beast.core.Distribution;
 import beast.core.Input;
 import beast.core.Input.Validate;
+import beast.core.parameter.IntegerParameter;
 import beast.core.parameter.RealParameter;
+import beast.core.util.CompoundDistribution;
+import beast.evolution.alignment.Alignment;
+import beast.evolution.likelihood.GenericTreeLikelihood;
+import beast.evolution.operators.DeltaExchangeOperator;
+import beast.evolution.operators.Exchange;
 import beast.evolution.operators.KernelDistribution;
+import beast.evolution.sitemodel.SiteModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.math.distributions.LogNormalDistributionModel;
@@ -510,6 +520,38 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 		
 	}
 	
+	
+	/**
+	 * Remove all narrow exchange operators from the beauti doc
+	 * @param doc
+	 * @return
+	 */
+    public static void customConnector(BeautiDoc doc) {
+    	
+    	try {
+    	
+	    	// Find and destroy the narrow exchanges
+	    	for (String str : doc.pluginmap.keySet()) {
+	    		
+	    		BEASTInterface obj = doc.pluginmap.get(str);
+	    		if (obj instanceof Exchange) {
+	    			
+	    			Exchange operator = (Exchange) obj;
+	    			if (operator.isNarrowInput.get()) {
+	    				operator.m_pWeight.set(0.0);
+	    			}
+	    			
+	    			
+	    		}
+
+	    	}
+    	
+    	} catch (Exception e) {
+			
+		}
+    	
+    }
+    
 	
 	
 
