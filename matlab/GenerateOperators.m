@@ -380,7 +380,7 @@ for i = 1: 1: numMaxSolvable(2)
     
     
 
-    outputFnStr = sprintf("package NERVariants;\n\n");
+    outputFnStr = sprintf("package orc.ner;\n\n");
     outputFnStr = strcat(outputFnStr, sprintf("import operators.MetaNEROperator;\n"));
     outputFnStr = strcat(outputFnStr, sprintf("import beast.util.Randomizer;\n\n"));
     
