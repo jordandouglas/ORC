@@ -2,14 +2,14 @@
 
 
 
-A BEAST2 package containing a series of optimisations made to improve the performance of the phylogenetic relaxed clock model. 
-Depending on the dataset, the methods presented here can yield relaxed clock model mixing up to 65 times faster than the standard BEAST2 relaxed clock model setup.
-This gap widens as the alignment becomes longer making this package very effective at doing inference on long alignments.
+A BEAST 2 package containing a series of optimisations made to improve the performance of the phylogenetic relaxed clock model. 
+Depending on the dataset, the methods presented here can yield relaxed clock model mixing up to 65 times faster than the standard BEAST 2 relaxed clock model setup.
+The gap widens as the alignment becomes longer making this package very effective at doing inference on long alignments.
 
 
 ## Installation instructions
 
-Both installation pathways assume you have BEAST2 already installed on your machine https://www.beast2.org/
+Both installation pathways assume you have BEAST 2 already installed on your machine https://www.beast2.org/
 
 
 ### BEAUti
@@ -51,7 +51,7 @@ If ORC is not in the list of packages, you may need to add an extra package repo
 
 ![](figs/fig5.png)
 
-8. File -> Save As and run the .xml file using BEAST2 as per usual
+8. File -> Save As and run the .xml file using BEAST 2 as per usual
 
 
 
@@ -59,7 +59,7 @@ If ORC is not in the list of packages, you may need to add an extra package repo
 
 
 
-To install this package manually, first clone this repository and all of its dependencies from GitHub, including BEAST2
+To install this package manually, first clone this repository and all of its dependencies from GitHub, including BEAST 2
 
 ```
 mkdir beast2
@@ -76,16 +76,16 @@ Then navigate to into each directory and install them using ant
 cd BEAST2
 ant linux
 
-cd BEASTLabs
+cd ../BEASTLabs
 ant addon
 
-cd ConstantDistanceOperator
+cd ../ConstantDistanceOperator
 ant addon
 
-cd ORC
+cd ../ORC
 ant addon
 
-cd ..
+cd ../
 ```
 
 Finally, extract the contents of these addons:
@@ -97,7 +97,7 @@ unzip -o ORC/build/dist/ORC.addon.v*zip -d ~/.beast/2.6/ORC/.
 ```
 
 
-This assumes that BEAST2 is installed in the ~/.beast2/ directory.
+This assumes that BEAST 2 is installed in the ~/.BEAST 2/ directory.
 
 If you are not using BEAST 2.6 then replace 2.6 with the appropriate version number.
 For more details see https://beast2.blogs.auckland.ac.nz/managing-packages/#Install_by_hand .
