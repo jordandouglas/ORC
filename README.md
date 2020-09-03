@@ -4,14 +4,46 @@ Optimised Relaxed Clock
 
 ## Installation instructions
 
+Both installation pathways assume you have BEAST2 already installed on your machine https://www.beast2.org/
+
+
 ### BEAUti
+
+
+1. Launch BEAUti
+2. Click on File -> Manage Packages
+
+![](figs/fig1.png)
+
+
+3. Install ORC
+
+![](figs/fig2.png)
+
+
+4. Import and alignment and set up the model as per usual
+
+5. On the Clock Model tab, select 'Optimised Relaxed Clock' from the dropdown menu
+
+![](figs/fig3.png)
+
+
+
+6. To confirm this has worked, display the Operators tab as shown below
+
+![](figs/fig4.png)
+
+7. You should see the following 4 adaptive operators in the Operators tab:
+
+![](figs/fig5.png)
+
+8. File -> Save As and run the .xml file using BEAST2 as per usual
 
 
 
 ### By hand
 
-This assumes you have already installed BEAST2 on your machine
-https://www.beast2.org/
+
 
 To install this package manually, first clone this repository and all of its dependencies from GitHub, including BEAST2
 
