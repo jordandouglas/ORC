@@ -56,51 +56,51 @@
 
 				
 			
-				<operator id="AdaptableOperatorSampler.sigma.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" weight="3.0">
+				<operator id="ORCAdaptableOperatorSampler_sigma.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" weight="3.0">
 					<parameter idref="ORCsigma.c:$(n)" />
 					<operator id="ORCucldStdevScaler.c:$(n)" spec="consoperators.UcldScalerOperator" distr="@ORCLogNormalDistributionModel.c:$(n)" rates="@ORCRates.c:$(n)" scaleFactor="0.5" stdev="@ORCsigma.c:$(n)" weight="1.0">
 						<kernel spec="beast.evolution.operators.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
 					</operator>
-					<operator id="UcldStdevRandomWalk.c:$(n)" spec="BactrianRandomWalkOperator" parameter="@ORCsigma.c:$(n)" weight="1" scaleFactor="0.1">
+					<operator id="ORCUcldStdevRandomWalk.c:$(n)" spec="BactrianRandomWalkOperator" parameter="@ORCsigma.c:$(n)" weight="1" scaleFactor="0.1">
 						<kernelDistribution spec="beast.evolution.operators.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
 					</operator>
-					<operator id="UcldStdevScale.c:$(n)" spec="BactrianScaleOperator" scaleFactor="0.5" parameter="@ORCsigma.c:$(n)" weight="1">
+					<operator id="ORCUcldStdevScale.c:$(n)" spec="BactrianScaleOperator" scaleFactor="0.5" parameter="@ORCsigma.c:$(n)" weight="1">
 						<kernelDistribution spec="beast.evolution.operators.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
 					</operator>
-					<operator id="SampleFromPriorOperator.sigma.c:$(n)" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCsigma.c:$(n)" prior="@ORCgammaPrior.c:$(n)" weight="1"/>
+					<operator id="ORCSampleFromPriorOperator_sigma.c:$(n)" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCsigma.c:$(n)" prior="@ORCgammaPrior.c:$(n)" weight="1"/>
 				</operator>
 				
 
-				<operator id="AdaptableOperatorSampler.rates.root.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" parameter="@ORCRates.c:$(n)" tree="@Tree.t:$(n)" weight="0.1">
-					<operator id="RootOperator1.c:$(n)" spec="consoperators.SimpleDistance" twindowSize="0.005" tree="@Tree.t:$(n)" clockModel="@OptimisedRelaxedClock.c:$(n)" rates="@ORCRates.c:$(n)"  weight="1">
+				<operator id="ORCAdaptableOperatorSampler_rates_root.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" parameter="@ORCRates.c:$(n)" tree="@Tree.t:$(n)" weight="0.1">
+					<operator id="ORCRootOperator1.c:$(n)" spec="consoperators.SimpleDistance" twindowSize="0.005" tree="@Tree.t:$(n)" clockModel="@OptimisedRelaxedClock.c:$(n)" rates="@ORCRates.c:$(n)"  weight="1">
 						<kernel spec="beast.evolution.operators.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
 					</operator>
-					<operator id="RootOperator2.c:$(n)" spec="consoperators.SmallPulley" dwindowSize="0.005" tree="@Tree.t:$(n)" clockModel="@OptimisedRelaxedClock.c:$(n)" rates="@ORCRates.c:$(n)"  weight="1">
+					<operator id="ORCRootOperator2.c:$(n)" spec="consoperators.SmallPulley" dwindowSize="0.005" tree="@Tree.t:$(n)" clockModel="@OptimisedRelaxedClock.c:$(n)" rates="@ORCRates.c:$(n)"  weight="1">
 						<kernel spec="beast.evolution.operators.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
 					</operator>
 				</operator>
 
 
 
-				<operator id="AdaptableOperatorSampler.rates.internal.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" parameter="@ORCRates.c:$(n)" tree="@Tree.t:$(n)" weight="20">
-					<operator id="InternalnodesOperator.c:$(n)" spec="consoperators.InConstantDistanceOperator" twindowSize="0.005"  tree="@Tree.t:$(n)" clockModel="@OptimisedRelaxedClock.c:$(n)" rates="@ORCRates.c:$(n)"  weight="1">
+				<operator id="ORCAdaptableOperatorSampler_rates_internal.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" parameter="@ORCRates.c:$(n)" tree="@Tree.t:$(n)" weight="20">
+					<operator id="ORCInternalnodesOperator.c:$(n)" spec="consoperators.InConstantDistanceOperator" twindowSize="0.005"  tree="@Tree.t:$(n)" clockModel="@OptimisedRelaxedClock.c:$(n)" rates="@ORCRates.c:$(n)"  weight="1">
 						<kernel spec="beast.evolution.operators.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
 					</operator>
-					<operator id="RatesRandomWalk.c:$(n)" spec="BactrianRandomWalkOperator" parameter="@ORCRates.c:$(n)" weight="1" scaleFactor="0.1">
+					<operator id="ORCRatesRandomWalk.c:$(n)" spec="BactrianRandomWalkOperator" parameter="@ORCRates.c:$(n)" weight="1" scaleFactor="0.1">
 						<kernelDistribution spec="beast.evolution.operators.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
 					</operator>
-					<operator id="RatesScale.c:$(n)" spec="BactrianScaleOperator" scaleFactor="0.5" parameter="@ORCRates.c:$(n)" weight="1">
+					<operator id="ORCRatesScale.c:$(n)" spec="BactrianScaleOperator" scaleFactor="0.5" parameter="@ORCRates.c:$(n)" weight="1">
 						<kernelDistribution spec="beast.evolution.operators.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
 					</operator>
-					<operator id="SampleFromPriorOperator.rates.c:$(n)" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCRates.c:$(n)" np="1" prior="@ORCLogNormalDistributionModel.c:$(n)" weight="1"/>
+					<operator id="ORCSampleFromPriorOperator.rates.c:$(n)" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCRates.c:$(n)" np="1" prior="@ORCLogNormalDistributionModel.c:$(n)" weight="1"/>
 				</operator>
 
 				
 	
-				<operator id="AdaptableOperatorSampler.NER.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" tree="@Tree.t:$(n)" weight="15">
+				<operator id="ORCAdaptableOperatorSampler_NER.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" tree="@Tree.t:$(n)" weight="15">
 					<metric spec="beast.evolution.tree.RobinsonsFouldMetric" taxonset="@TaxonSet.$(n)"/>
-					<operator id="NER_null.c:$(n)" spec="Exchange" tree="@Tree.t:$(n)" weight="1"/>
-					<operator id="NER_dAE_dBE_dCE.c:$(n)" spec="orc.ner.NEROperator_dAE_dBE_dCE" tree="@Tree.t:$(n)" rates="@ORCRates.c:$(n)" weight="1"/>
+					<operator id="ORCNER_null.c:$(n)" spec="Exchange" tree="@Tree.t:$(n)" weight="1"/>
+					<operator id="ORCNER_dAE_dBE_dCE.c:$(n)" spec="orc_NER.NEROperator_dAE_dBE_dCE" tree="@Tree.t:$(n)" rates="@ORCRates.c:$(n)" weight="1"/>
 				</operator>
 	
 
@@ -123,16 +123,16 @@
 
 
 			
-			<connect srcID='AdaptableOperatorSampler.sigma.c:$(n)' targetID='mcmc' inputName='operator'
+			<connect srcID='ORCAdaptableOperatorSampler_sigma.c:$(n)' targetID='mcmc' inputName='operator'
                      if='inlikelihood(ORCsigma.c:$(n)) and ORCsigma.c:$(n)/estimate=true'> Adaptive weight operator for the relaxed clock standard deviation of partition c:$(n)
             </connect>
-			<connect srcID='AdaptableOperatorSampler.rates.root.c:$(n)' targetID='mcmc' inputName='operator'
+			<connect srcID='ORCAdaptableOperatorSampler_rates_root.c:$(n)' targetID='mcmc' inputName='operator'
                     if='inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the root node and incident branch rates of partition c:$(n)
             </connect>
-			<connect srcID='AdaptableOperatorSampler.rates.internal.c:$(n)' targetID='mcmc' inputName='operator'
+			<connect srcID='ORCAdaptableOperatorSampler_rates_internal.c:$(n)' targetID='mcmc' inputName='operator'
                      if='inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the internal nodes and branch rates of partition c:$(n)
             </connect>
-			<connect srcID='AdaptableOperatorSampler.NER.c:$(n)' targetID='mcmc' inputName='operator'
+			<connect srcID='ORCAdaptableOperatorSampler_NER.c:$(n)' targetID='mcmc' inputName='operator'
                      if='inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true and inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the tree of partition c:$(n) (Narrow Exchange Rates)
             </connect>
 			
