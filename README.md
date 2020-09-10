@@ -7,6 +7,11 @@ Depending on the dataset, the methods presented here can yield relaxed clock mod
 The gap widens as the alignment becomes longer making this package very effective at doing inference on long alignments.
 
 
+"Adaptive dating and fast proposals: revisiting the phylogenetic relaxed clock model." J. Douglas, R. Zhang, and  R. Bouckaert
+
+https://doi.org/10.1101/2020.09.09.289124 
+
+
 ## Installation instructions
 
 Both installation pathways assume you have BEAST 2 already installed on your machine https://www.beast2.org/
