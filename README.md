@@ -8,7 +8,6 @@ The gap widens as the alignment becomes longer making this package very effectiv
 
 
 "Adaptive dating and fast proposals: revisiting the phylogenetic relaxed clock model." J. Douglas, R. Zhang, and  R. Bouckaert
-
 https://doi.org/10.1101/2020.09.09.289124 
 
 
