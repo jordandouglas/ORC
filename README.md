@@ -111,6 +111,10 @@ For more details see https://beast2.blogs.auckland.ac.nz/managing-packages/#Inst
 Run matlab/GenerateOperators.m using MATLAB to generate all 47 solvable operators with non-zero Jacobians from the complete set of 63 (excluding narrow exchange)
 
 
+## Benchmarking results
 
+For xml files used during benchmarking, please see
+
+https://github.com/jordandouglas/ClockModelPaper
 
 
