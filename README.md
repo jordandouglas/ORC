@@ -118,3 +118,6 @@ For xml files used during benchmarking, please see
 https://github.com/jordandouglas/ClockModelPaper
 
 
+## Citation
+
+Jordan Douglas, Rong Zhang,Remco Bouckaert. Adaptive dating and fast proposals: revisiting the phylogenetic relaxed clock model. <a href="https://www.biorxiv.org/content/10.1101/2020.09.09.289124v1.abstract">bioRxiv 2020.09.09.289124</a>
