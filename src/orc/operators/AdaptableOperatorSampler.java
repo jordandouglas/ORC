@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import beast.core.Function;
 import beast.core.Input;
 import beast.core.Operator;
 import beast.core.OperatorSchedule;
@@ -36,8 +37,8 @@ public class AdaptableOperatorSampler extends Operator {
 	
 	
 
-    final public Input<List<Parameter>> paramInput = new Input<>("parameter", "list of parameters to compare before and after the proposal. If the tree heights"
-    		+ " are a parameter then include the tree under 'tree'", new ArrayList<Parameter>());
+    final public Input<List<Function>> paramInput = new Input<>("parameter", "list of parameters to compare before and after the proposal. If the tree heights"
+    		+ " are a parameter then include the tree under 'tree'", new ArrayList<Function>());
     final public Input<Tree> treeInput = new Input<>("tree", "tree containing node heights to compare before and after the proposal (optional)");
     final public Input<List<Operator>> operatorsInput = new Input<>("operator", "list of operators to select from", new ArrayList<Operator>());
     
@@ -57,7 +58,7 @@ public class AdaptableOperatorSampler extends Operator {
     
 
     
-    List<Parameter> parameters;
+    List<Function> parameters;
     Tree tree;
     List<Operator> operators;
     double uniformSampleProb;
@@ -164,9 +165,9 @@ public class AdaptableOperatorSampler extends Operator {
 		
 		
 		// Check parameters
-		for (Parameter p : this.parameters) {
+		for (Function p : this.parameters) {
 			if (! (p instanceof RealParameter) && !(p instanceof IntegerParameter)) {
-				throw new IllegalArgumentException("Parameters must be Real or Integer parameters!");
+				//throw new IllegalArgumentException("Parameters must be Real or Integer parameters!");
 			}
 		}
 		
@@ -579,8 +580,10 @@ public class AdaptableOperatorSampler extends Operator {
     
     @Override
     public List<StateNode> listStateNodes() {
+    	
     	List<StateNode> stateNodes = new ArrayList<StateNode>(); //super.listStateNodes();
     	
+
 
     	for (int i = 0; i < this.numOps; i ++) {
     		
