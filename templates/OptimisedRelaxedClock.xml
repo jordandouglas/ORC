@@ -39,7 +39,7 @@
 				<prior id="ORCsigmaPrior.c:$(n)" name="distribution" x="@ORCsigma.c:$(n)">
 
 					<!-- this prior has a median of 0.1 and 97.5% of its probability is below S=1 -->
-					<distr id="ORCgammaPrior.c:$(n)" spec="beast.math.distributions.Gamma">
+					<distr spec="beast.math.distributions.Gamma">
 						<parameter name='alpha' value="0.5396" estimate='false'/> <!-- shape -->
 						<parameter name='beta' value="0.3819" estimate='false'/> <!-- scale -->
 					</distr>
@@ -54,8 +54,8 @@
 
 				<operator id="ORCucldMeanScaler.c:$(n)" spec="ScaleOperator" parameter="@ORCucldMean.c:$(n)" scaleFactor="0.5" weight="5.0"/>
 
-				
-			
+
+
 				<operator id="ORCAdaptableOperatorSampler_sigma.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" weight="3.0">
 					<parameter idref="ORCsigma.c:$(n)" />
 					<operator id="ORCucldStdevScaler.c:$(n)" spec="consoperators.UcldScalerOperator" distr="@ORCLogNormalDistributionModel.c:$(n)" rates="@ORCRates.c:$(n)" scaleFactor="0.5" stdev="@ORCsigma.c:$(n)" weight="1.0">
@@ -67,9 +67,9 @@
 					<operator id="ORCUcldStdevScale.c:$(n)" spec="BactrianScaleOperator" scaleFactor="0.5" parameter="@ORCsigma.c:$(n)" weight="1">
 						<kernelDistribution spec="beast.evolution.operators.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
 					</operator>
-					<operator id="ORCSampleFromPriorOperator_sigma.c:$(n)" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCsigma.c:$(n)" prior="@ORCgammaPrior.c:$(n)" weight="1"/>
+					<operator id="ORCSampleFromPriorOperator_sigma.c:$(n)" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCsigma.c:$(n)" prior2="@ORCsigmaPrior.c:$(n)" weight="1"/>
 				</operator>
-				
+
 
 				<operator id="ORCAdaptableOperatorSampler_rates_root.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" parameter="@ORCRates.c:$(n)" tree="@Tree.t:$(n)" weight="0.1">
 					<operator id="ORCRootOperator1.c:$(n)" spec="consoperators.SimpleDistance" twindowSize="0.005" tree="@Tree.t:$(n)" clockModel="@OptimisedRelaxedClock.c:$(n)" rates="@ORCRates.c:$(n)"  weight="1">
@@ -95,19 +95,19 @@
 					<operator id="ORCSampleFromPriorOperator.rates.c:$(n)" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCRates.c:$(n)" np="1" prior="@ORCLogNormalDistributionModel.c:$(n)" weight="1"/>
 				</operator>
 
-				
-	
+
+
 				<operator id="ORCAdaptableOperatorSampler_NER.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" tree="@Tree.t:$(n)" weight="15">
 					<metric spec="beast.evolution.tree.RobinsonsFouldMetric" taxonset="@TaxonSet.$(n)"/>
 					<operator id="ORCNER_null.c:$(n)" spec="Exchange" tree="@Tree.t:$(n)" weight="1"/>
 					<operator id="ORCNER_dAE_dBE_dCE.c:$(n)" spec="orc.ner.NEROperator_dAE_dBE_dCE" tree="@Tree.t:$(n)" rates="@ORCRates.c:$(n)" weight="1"/>
 				</operator>
-	
+
 
 				<log id="ORCRatesStat.c:$(n)" spec="beast.evolution.branchratemodel.RateStatistic" branchratemodel="@OptimisedRelaxedClock.c:$(n)" tree="@Tree.t:$(n)"/>
-				
+
 			]]>
-			
+
             <connect srcID='ORCucldMean.c:$(n)' targetID='state' inputName='stateNode'
                      if='inlikelihood(ORCucldMean.c:$(n)) and ORCucldMean.c:$(n)/estimate=true'/>
             <connect srcID='ORCsigma.c:$(n)' targetID='state' inputName='stateNode'
@@ -118,11 +118,11 @@
             <connect srcID='ORCucldMeanScaler.c:$(n)' targetID='mcmc' inputName='operator'
                      if='inlikelihood(ORCucldMean.c:$(n)) and ORCucldMean.c:$(n)/estimate=true'>Scale clock rate of partition c:$(n)
             </connect>
-			
-			
 
 
-			
+
+
+
 			<connect srcID='ORCAdaptableOperatorSampler_sigma.c:$(n)' targetID='mcmc' inputName='operator'
                      if='inlikelihood(ORCsigma.c:$(n)) and ORCsigma.c:$(n)/estimate=true'> Adaptive weight operator for the relaxed clock standard deviation of partition c:$(n)
             </connect>
@@ -135,7 +135,7 @@
 			<connect srcID='ORCAdaptableOperatorSampler_NER.c:$(n)' targetID='mcmc' inputName='operator'
                      if='inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true and inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the tree of partition c:$(n) (Narrow Exchange Rates)
             </connect>
-			
+
 			<!-- Destroy the standard narrow exchange operator -->
 			<connect method="orc.operators.MetaNEROperator.customConnector"/>
 

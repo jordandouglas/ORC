@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.math.MathException;
 
 import beast.core.Input;
+import beast.core.Input.Validate;
 import beast.core.Operator;
 import beast.core.StateNode;
 import beast.core.parameter.IntegerParameter;
@@ -15,6 +16,7 @@ import beast.core.util.Log;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.math.distributions.ParametricDistribution;
+import beast.math.distributions.Prior;
 import beast.util.Randomizer;
 
 
@@ -36,6 +38,7 @@ public class SampleFromPriorOperator extends Operator {
 	
     final public Input<Parameter> paramInput = new Input<>("parameter", "the parameter sample", Input.Validate.REQUIRED);
     final public Input<ParametricDistribution> priorInput = new Input<>("prior", "the prior distribution of the parameter");
+    final public Input<Prior> prior2Input = new Input<>("prior2", "the prior distribution of the parameter", Validate.XOR, priorInput);
     final public Input<Tree> treeInput = new Input<>("tree", "the tree that the parameter belong to (if applicable)", Input.Validate.OPTIONAL);
     final public Input<Double> npInput = new Input<>("np", "tunable parameter describing the mean number of elements in the parameter vector to sample", 1.0);
     
@@ -57,6 +60,9 @@ public class SampleFromPriorOperator extends Operator {
 		
 		parameter = paramInput.get();
 		prior = priorInput.get();
+		if (prior == null) {
+			prior = prior2Input.get().distInput.get();
+		}
 		tree = treeInput.get();
 		np = npInput.get();
 		this.validateNP(true);
