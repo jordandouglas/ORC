@@ -92,7 +92,7 @@
 					<operator id="ORCRatesScale.c:$(n)" spec="BactrianScaleOperator" scaleFactor="0.5" parameter="@ORCRates.c:$(n)" weight="1">
 						<kernelDistribution spec="beast.evolution.operators.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
 					</operator>
-					<operator id="ORCSampleFromPriorOperator.rates.c:$(n)" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCRates.c:$(n)" np="1" prior="@ORCLogNormalDistributionModel.c:$(n)" weight="1"/>
+					<operator id="ORCSampleFromPriorOperator.rates.c:$(n)" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCRates.c:$(n)" np="1" prior2="@ORCRatePriorDistribution.c:$(n)" weight="1"/>
 				</operator>
 
 
