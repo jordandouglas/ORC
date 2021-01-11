@@ -25,8 +25,8 @@
 				</branchRateModel>
 
 
-				<parameter id="ORCsigma.c:$(n)" name="stateNode">0.2</parameter>
-				<parameter id="ORCRates.c:$(n)" name="stateNode">0.5</parameter>
+				<parameter id="ORCsigma.c:$(n)" name="stateNode" lower="0.0">0.2</parameter>
+				<parameter id="ORCRates.c:$(n)" name="stateNode" lower="0.0">0.5</parameter>
 
 
 				<prior id="ORCRatePriorDistribution.c:$(n)" name="distribution" x="@ORCRates.c:$(n)">
