@@ -1,13 +1,13 @@
 <!-- Build ORC. It is also used by Hudson ORC project. JUnit test is available for this build. -->
 <project basedir="." default="build_jar_all_ORC" name="BUILD_ORC">
 	<description>
-	    Build ORC. 
+	    Build ORC.
 	    JUnit test is available for this build.
 	    $Id: build_ORC.xml $
 	</description>
 
 	<!-- set global properties for this build -->
-	<property name="versionORC" value="1.0.1" />
+	<property name="versionORC" value="1.0.2" />
 	<property name="srcORC" location="src" />
 	<property name="docORC" location="doc" />
 	<property name="buildORC" location="build" />
@@ -80,7 +80,7 @@
 		<mkdir dir="${buildORC}" />
 
 		<!-- Compile the java code from ${srcORC} into ${buildORC} /bin -->
-		<javac srcdir="${srcORC}" destdir="${buildORC}" classpathref="classpath" 
+		<javac srcdir="${srcORC}" destdir="${buildORC}" classpathref="classpath"
 		       fork="true"
 		       memoryinitialsize="256m"
 		       memorymaximumsize="256m"
@@ -147,7 +147,7 @@
 		<java jar="${distORC}/ORC.jar" fork="true" />
 	</target>
 
-	
+
 	<!-- JUnit test -->
 	<target name="junitORC">
 		<mkdir dir="${report}" />
@@ -161,17 +161,17 @@
 
 			<batchtest fork="yes" todir="${report}">
 				<fileset dir="${srcORC}">
-                    <include name="test/**/*Test.java"/>                                         
+                    <include name="test/**/*Test.java"/>
 				</fileset>
 				<fileset dir="${srcBeast2}">
-                    <include name="test/beast/integration/**/*Test.java"/>                                         
-                    <exclude name="test/beast/integration/**/ResumeTest.java"/>                                         
+                    <include name="test/beast/integration/**/*Test.java"/>
+                    <exclude name="test/beast/integration/**/ResumeTest.java"/>
 				</fileset>
 			</batchtest>
 		</junit>
 		<echo message="JUnit test finished." />
 	</target>
-    
+
     <target name="junitreport">
 		<junitreport todir="${report}">
 			<fileset dir="${report}" includes="*.xml"/>
@@ -210,13 +210,13 @@
 		<copy todir="${Add_on_dir}">
 			<fileset dir="${distORC}" includes="ORC.src.jar" />
 		</copy>
-		
-		
+
+
 		<copy todir="${Add_on_dir}/templates">
 			<fileset file="templates/*.xml" />
 		</copy>
-		
-		
+
+
 		<jar jarfile="${distORC}/ORC.addon.v${versionORC}.zip">
 			<fileset dir="${Add_on_dir}">
 				<include name="**/*" />
