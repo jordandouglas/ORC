@@ -52,6 +52,9 @@ public class AdaptableOperatorSampler extends Operator {
     
     final public Input<TreeMetric> treeMetricInput = new Input<>("metric", "A function for computing the distance between trees. If left empty, then tree distances will not be compared");
 	
+    final public Input<Double> maxRuntimeInput = new Input<>("maxRuntine", "The maximum amount of time (ms) to count towards the runtime of an operator. This should ensure that indefinite thread interruptions,"
+    		+ "eg. on a cluster, do not unfairly penalise an operator for being slow", 10000.0);
+	
     
     
     final boolean DEBUG = false;
@@ -460,7 +463,7 @@ public class AdaptableOperatorSampler extends Operator {
 	
 	
 	/**
-	 * Updates the mean runtime of this operator
+	 * Updates the mean runtime of this operator in ms
 	 * @param startTime
 	 * @param stopTime
 	 * @param operatorNum
@@ -473,6 +476,9 @@ public class AdaptableOperatorSampler extends Operator {
 		
 		// If the operator is too fast the time will be zero. In this case, take the value of 1ns
 		time = Math.max(time, 0.001);
+		
+		// Do not go over the maximum time, as this could be due to pauses
+		time = Math.min(time, maxRuntimeInput.get());
 		
 		int n = this.numProposals[operatorNum];
 		double sum = this.operator_mean_runtimes[operatorNum]*(n-1) + time;
