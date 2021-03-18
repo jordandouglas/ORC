@@ -47,7 +47,7 @@ public class AdaptableOperatorSampler extends Operator {
     		+ " (default: 100 x number of operators)");
     
     
-    final public Input<Double> uniformSampleProbInput = new Input<>("uniformp", "the probability that operators are sampled uniformly at random instead of using the trained parameters (default 0.01)", 0.01);
+    final public Input<Double> uniformSampleProbInput = new Input<>("uniformp", "the probability that operators are sampled uniformly at random instead of using the trained parameters (default 0.1)", 0.1);
 	
     
     final public Input<TreeMetric> treeMetricInput = new Input<>("metric", "A function for computing the distance between trees. If left empty, then tree distances will not be compared");
