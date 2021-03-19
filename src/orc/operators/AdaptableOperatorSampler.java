@@ -39,7 +39,7 @@ public class AdaptableOperatorSampler extends Operator {
 
     final public Input<List<Function>> paramInput = new Input<>("parameter", "list of parameters to compare before and after the proposal. If the tree heights"
     		+ " are a parameter then include the tree under 'tree'", new ArrayList<Function>());
-    final public Input<Tree> treeInput = new Input<>("tree", "tree containing node heights to compare before and after the proposal (optional)");
+    final public Input<List<Tree>> treeInput = new Input<>("tree", "tree(s) containing node heights to compare before and after the proposal (optional)", new ArrayList<>());
     final public Input<List<Operator>> operatorsInput = new Input<>("operator", "list of operators to select from", new ArrayList<Operator>());
     
     final public Input<Integer> burninInput = new Input<>("burnin", "number of operator calls until the learning process begins (default: 1000)", 1000);
@@ -56,13 +56,15 @@ public class AdaptableOperatorSampler extends Operator {
     		+ "eg. on a cluster, do not unfairly penalise an operator for being slow", 10000.0);
 	
     
+    final public Input<Boolean> setWeightFromDimension = new Input<>("dimensional", "Whether to set the weight of this operator as the dimension of its parameter", false);
+    
     
     final boolean DEBUG = false;
     
 
     
     List<Function> parameters;
-    Tree tree;
+    List<Tree> trees;
     List<Operator> operators;
     double uniformSampleProb;
     int burnin;
@@ -89,7 +91,7 @@ public class AdaptableOperatorSampler extends Operator {
     
     // The parameter values from before the current proposal was made
     double[][] stateBefore;
-    Tree treeBefore = null;
+    List<Tree> treesBefore = new ArrayList<>();
     
     // The start time of the previously called proposal
     long startTimeOfProposal;
@@ -123,10 +125,12 @@ public class AdaptableOperatorSampler extends Operator {
 		this.numOps = this.operators.size();
 		
 		// Parameters/tree
-		this.tree = treeInput.get();
+		this.trees = treeInput.get();
+		if (trees.isEmpty()) trees = null;
+		this.treesBefore = new ArrayList<>();
 		this.parameters = paramInput.get();
 		this.treeMetric = treeMetricInput.get();
-		this.numParams = this.parameters.size() + (this.tree == null ? 0 : 1);
+		this.numParams = this.parameters.size() + (this.trees == null ? 0 : 1);
 		
 		// Burnin
 		this.burnin = Math.max(0, burninInput.get());
@@ -152,16 +156,13 @@ public class AdaptableOperatorSampler extends Operator {
 		if (this.numOps < 2) {
 			throw new IllegalArgumentException("Please provide at least two operators");
 		}
-		if (this.treeMetric != null && this.tree == null) {
-			
-		}
 		if (this.numParams == 0) {
 			Log.warning("Warning: at least one sampled parameter or a tree should be provided to assist in measuring the efficiency of each operator.");
 		}
 		
 		// If there is a tree metric, then ensure there is a tree and no parameters
 		if (this.treeMetric != null) {
-			if (this.tree == null) throw new IllegalArgumentException("Please provide a tree (or do not provide a tree metric)");
+			if (this.trees == null) throw new IllegalArgumentException("Please provide a tree (or do not provide a tree metric)");
 			if (!this.parameters.isEmpty()) throw new IllegalArgumentException("Please provide parameters or a tree metric but not both");
 			this.numParams = 1;
 		}
@@ -215,6 +216,41 @@ public class AdaptableOperatorSampler extends Operator {
 			
 		}
 		
+		
+		// Dimensional weighting
+		if (setWeightFromDimension.get()) {
+			
+			
+			double weight = 0;
+			if (this.treeMetric != null) {
+				
+				// Topology: the dimension is number of nodes - 1
+				for (Tree tree : trees) weight += tree.getNodeCount()-1;
+				
+			}else {
+				
+				// Get the total dimensionality
+				for (int p = 0; p < this.numParams; p ++) {
+					
+					if (trees != null && p == this.numParams - 1 ) {
+						
+						// The parameter is the tree heights. ndim = num non-leaf nodes
+						for (Tree tree : trees) weight += tree.getNodeCount() - tree.getLeafNodeCount();
+						
+					}else {
+						// A RealParameter
+						weight += this.parameters.get(p).getDimension();
+					}
+					
+				}
+			}
+			
+			Log.warning("Dimensional weighting: setting the weight of " + this.getID() + " to " + weight);
+			this.m_pWeight.setValue(weight, this);
+			
+			
+		}
+		
 
 
 		
@@ -227,7 +263,12 @@ public class AdaptableOperatorSampler extends Operator {
 		
 		// Get the values of each parameter before doing the proposal
 		this.stateBefore = this.getAllParameterValues();
-		if (this.treeMetric != null) this.treeBefore = this.tree.copy();
+		if (this.treeMetric != null) {
+			this.treesBefore.clear();
+			for (Tree tree : this.trees) {
+				this.treesBefore.add(tree.copy());
+			}
+		}
 
 		
 		// Update sum and SS of each parameter before making the proposal
@@ -390,13 +431,21 @@ public class AdaptableOperatorSampler extends Operator {
 			
 			// Get the values of this parameter
 			double[] p_vals;
-			if (tree != null && p == this.numParams - 1 ) {
+			if (trees != null && p == this.numParams - 1 ) {
 				
 				// The parameter is the tree heights
-				p_vals = new double[tree.getNodeCount()];
-				for (int nodeNum = 0; nodeNum < tree.getNodeCount(); nodeNum++) {
-					p_vals[nodeNum] = tree.getNode(nodeNum).getHeight();
+				int numNodes = 0;
+				for (Tree tree : trees) numNodes += tree.getNodeCount();
+				p_vals = new double[numNodes];
+				int nodeNum = 0;
+				for (Tree tree : trees) {
+					for (int treeNodeNum = 0; treeNodeNum < tree.getNodeCount(); treeNodeNum++) {
+						p_vals[nodeNum] = tree.getNode(treeNodeNum).getHeight();
+						nodeNum ++;
+					}
 				}
+				
+				
 			}else {
 				
 				// A RealParameter
@@ -432,7 +481,7 @@ public class AdaptableOperatorSampler extends Operator {
 				double[][] stateAfter = this.getAllParameterValues();
 	
 				// Compute the average squared difference between the before and after states
-				double[] squaredDiffs = this.computeSS(this.stateBefore, stateAfter, this.treeBefore, this.tree);
+				double[] squaredDiffs = this.computeSS(this.stateBefore, stateAfter, this.treesBefore, this.trees);
 				
 				// Update the sum of squared diffs for each parameter with respect to this operator
 				for (int p = 0; p < this.numParams; p ++) {
@@ -492,15 +541,18 @@ public class AdaptableOperatorSampler extends Operator {
 	 * @param before
 	 * @param after
 	 */
-	private double[] computeSS(double[][] before, double[][] after, Tree beforeTree, Tree afterTree) {
+	private double[] computeSS(double[][] before, double[][] after, List<Tree> beforeTrees, List<Tree> afterTrees) {
 		
 		
 		double[] squaredDiff = new double[this.numParams];
 		
 		
 		// Measure the distance between trees
+		squaredDiff[0] = 0;
 		if (this.treeMetric != null) {
-			squaredDiff[0] = Math.pow(this.treeMetric.distance(beforeTree, afterTree), 2);
+			for (int i = 0; i < beforeTrees.size(); i ++) {
+				squaredDiff[0] += Math.pow(this.treeMetric.distance(beforeTrees.get(i), afterTrees.get(i)), 2);
+			}
 		} 
 		
 		// Measure the distance between parameters
