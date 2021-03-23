@@ -154,7 +154,7 @@ public class AdaptableOperatorSampler extends Operator {
 		
 		// Validate
 		if (this.numOps < 2) {
-			throw new IllegalArgumentException("Please provide at least two operators");
+			Log.warning("Warning: please provide at least two operators");
 		}
 		if (this.numParams == 0) {
 			Log.warning("Warning: at least one sampled parameter or a tree should be provided to assist in measuring the efficiency of each operator.");
@@ -551,7 +551,8 @@ public class AdaptableOperatorSampler extends Operator {
 		squaredDiff[0] = 0;
 		if (this.treeMetric != null) {
 			for (int i = 0; i < beforeTrees.size(); i ++) {
-				squaredDiff[0] += Math.pow(this.treeMetric.distance(beforeTrees.get(i), afterTrees.get(i)), 2);
+				Tree afterTree = afterTrees.get(i);
+				if (afterTree.isDirtyCalculation()) squaredDiff[0] += Math.pow(this.treeMetric.distance(beforeTrees.get(i), afterTree), 2);
 			}
 		} 
 		
