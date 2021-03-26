@@ -52,8 +52,8 @@ public class AdaptableOperatorSampler extends Operator {
     
     final public Input<TreeMetric> treeMetricInput = new Input<>("metric", "A function for computing the distance between trees. If left empty, then tree distances will not be compared");
 	
-    final public Input<Double> maxRuntimeInput = new Input<>("maxRuntine", "The maximum amount of time (ms) to count towards the runtime of an operator. This should ensure that indefinite thread interruptions,"
-    		+ "eg. on a cluster, do not unfairly penalise an operator for being slow", 10000.0);
+    final public Input<Double> maxRuntimeInput = new Input<>("maxRuntime", "The maximum amount of time (ms) to count towards the runtime of an operator. This should ensure that indefinite thread interruptions,"
+    		+ "eg. on a cluster, do not unfairly penalise an operator for being slow", 1e6);
 	
     
     final public Input<Boolean> setWeightFromDimension = new Input<>("dimensional", "Whether to set the weight of this operator as the dimension of its parameter", false);
@@ -71,7 +71,6 @@ public class AdaptableOperatorSampler extends Operator {
     int learnin;
     int numParams;
     int numOps;
-    
     
     TreeMetric treeMetric;
     
@@ -298,6 +297,7 @@ public class AdaptableOperatorSampler extends Operator {
 		
 		// Do the proposal. If it gets accepted then the differences between the two states will be calculated afterwards
 		return operator.proposal();
+
 	}
 	
 	
@@ -552,7 +552,7 @@ public class AdaptableOperatorSampler extends Operator {
 		if (this.treeMetric != null) {
 			for (int i = 0; i < beforeTrees.size(); i ++) {
 				Tree afterTree = afterTrees.get(i);
-				if (afterTree.isDirtyCalculation()) squaredDiff[0] += Math.pow(this.treeMetric.distance(beforeTrees.get(i), afterTree), 2);
+				squaredDiff[0] += Math.pow(this.treeMetric.distance(beforeTrees.get(i), afterTree), 2);
 			}
 		} 
 		
