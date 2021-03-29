@@ -233,8 +233,8 @@ public class AdaptableOperatorSampler extends Operator {
 					
 					if (trees != null && p == this.numParams - 1 ) {
 						
-						// The parameter is the tree heights. ndim = num non-leaf nodes
-						for (Tree tree : trees) weight += tree.getNodeCount() - tree.getLeafNodeCount();
+						// Number of nodes
+						for (Tree tree : trees) weight += tree.getNodeCount(); // - tree.getLeafNodeCount();
 						
 					}else {
 						// A RealParameter
