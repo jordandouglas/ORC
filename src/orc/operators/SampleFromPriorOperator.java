@@ -221,7 +221,8 @@ public class SampleFromPriorOperator extends Operator {
 				
 			} catch (MathException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				return Double.NEGATIVE_INFINITY;
 			}
 			
 		}
