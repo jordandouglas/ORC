@@ -11,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import beast.core.Citation;
+import beast.core.Description;
 import beast.core.Function;
 import beast.core.Input;
 import beast.core.Operator;
@@ -29,10 +31,11 @@ import beast.util.Randomizer;
 /**
  * 
  * @author Jordan Douglas
- * An operator which selects samples from a series of other operators, with respect to their ability to explore one or more real/int parameters 
- * Training for each operator occurs following a burnin period
- * After a learnin period, AdaptableOperatorSampler should pick the operator which is giving the best results n a particular dataset
- */
+ */ 
+@Description("An operator which selects samples from a series of other operators, with respect to their ability to explore one or more real/int parameters" + 
+ " Training for each operator occurs following a burn-in period" +
+ " After a learning period, AdaptableOperatorSampler should pick the operator which is giving the best results n a particular dataset")
+@Citation(value="Adaptive dating and fast proposals: Revisiting the phylogenetic relaxed clock model. PLoS computational biology. 2021 Feb 2;17(2):e1008322.", DOI="10.1371/journal.pcbi.1008322")
 public class AdaptableOperatorSampler extends Operator {
 	
 	
