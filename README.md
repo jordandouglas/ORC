@@ -96,8 +96,8 @@ cd ../
 Finally, extract the contents of these addons:
 
 ```
-unzip -o BEASTLabs/build/dist/ORC.addon.v*zip -d ~/.beast/2.6/BEASTLabs/.
-unzip -o ConstantDistanceOperator/build/dist/ORC.addon.v*zip -d ~/.beast/2.6/FastRelaxedClockLogNormal/.
+unzip -o BEASTLabs/build/dist/BEASTlabs.addon.v*zip -d ~/.beast/2.6/BEASTLabs/.
+unzip -o ConstantDistanceOperator/build/dist/FastRelaxedClockLogNormal.addon.v*zip -d ~/.beast/2.6/FastRelaxedClockLogNormal/.
 unzip -o ORC/build/dist/ORC.addon.v*zip -d ~/.beast/2.6/ORC/.
 ```
 
