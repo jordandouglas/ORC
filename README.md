@@ -96,8 +96,8 @@ cd ../
 Finally, extract the contents of these addons:
 
 ```
-unzip -o BEASTLabs/build/dist/ORC.addon.v*zip -d ~/.beast/2.6/BEASTLabs/.
-unzip -o ConstantDistanceOperator/build/dist/ORC.addon.v*zip -d ~/.beast/2.6/FastRelaxedClockLogNormal/.
+unzip -o BEASTLabs/build/dist/BEASTlabs.addon.v*zip -d ~/.beast/2.6/BEASTLabs/.
+unzip -o ConstantDistanceOperator/build/dist/FastRelaxedClockLogNormal.addon.v*zip -d ~/.beast/2.6/FastRelaxedClockLogNormal/.
 unzip -o ORC/build/dist/ORC.addon.v*zip -d ~/.beast/2.6/ORC/.
 ```
 
@@ -121,4 +121,7 @@ https://github.com/jordandouglas/ClockModelPaper
 
 ## Citation
 
-Jordan Douglas, Rong Zhang,Remco Bouckaert. Adaptive dating and fast proposals: revisiting the phylogenetic relaxed clock model. <a href="https://www.biorxiv.org/content/10.1101/2020.09.09.289124v1.abstract">bioRxiv 2020.09.09.289124</a>
+Jordan Douglas, Rong Zhang,Remco Bouckaert. 
+Adaptive dating and fast proposals: Revisiting the phylogenetic relaxed clock model. PLoS computational biology. 2021 Feb 2;17(2):e1008322.
+<a href="https://doi.org/10.1371/journal.pcbi.1008322">paper</a>
+<a href="https://www.biorxiv.org/content/10.1101/2020.09.09.289124v1.abstract">preprint</a>
