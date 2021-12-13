@@ -71,7 +71,7 @@
 				</operator>
 
 
-				<operator id="ORCAdaptableOperatorSampler_rates_root.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" parameter="@ORCRates.c:$(n)" tree="@Tree.t:$(n)" weight="0.1">
+				<operator id="ORCAdaptableOperatorSampler_rates_root.c:$(n)" spec="orc.operators.AdaptableOperatorSampler" parameter="@ORCRates.c:$(n)" tree="@Tree.t:$(n)" weight="1.0">
 					<operator id="ORCRootOperator1.c:$(n)" spec="consoperators.SimpleDistance" twindowSize="0.005" tree="@Tree.t:$(n)" clockModel="@OptimisedRelaxedClock.c:$(n)" rates="@ORCRates.c:$(n)"  weight="1">
 						<kernel spec="beast.evolution.operators.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
 					</operator>
