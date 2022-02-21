@@ -4,7 +4,6 @@ import beast.core.Citation;
 import beast.util.Randomizer;
 import orc.operators.MetaNEROperator;
 
-@Citation(value="Jordan Douglas, Rong Zhang,Remco Bouckaert. Adaptive dating and fast proposals: revisiting the phylogenetic relaxed clock model. bioRxiv 2020.09.09.289124", DOI="10.1101/2020.09.09.289124")
 public class NEROperator_dAE_dBE_dCE extends MetaNEROperator {
 
 	@Override
