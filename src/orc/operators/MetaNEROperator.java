@@ -1,28 +1,21 @@
 package orc.operators;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 import beast.app.beauti.BeautiDoc;
 import beast.core.BEASTInterface;
-import beast.core.Description;
-import beast.core.Distribution;
 import beast.core.Input;
 import beast.core.Input.Validate;
-import beast.core.parameter.IntegerParameter;
 import beast.core.parameter.RealParameter;
-import beast.core.util.CompoundDistribution;
-import beast.evolution.alignment.Alignment;
-import beast.evolution.likelihood.GenericTreeLikelihood;
-import beast.evolution.operators.DeltaExchangeOperator;
 import beast.evolution.operators.Exchange;
 import beast.evolution.operators.KernelDistribution;
-import beast.evolution.sitemodel.SiteModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.math.distributions.LogNormalDistributionModel;
 import beast.math.distributions.ParametricDistribution;
-import beast.math.distributions.PiecewiseLinearDistribution;
+import consoperators.math.distributions.PiecewiseLinearDistribution;
 import beast.util.Randomizer;
 import consoperators.ConsOperatorUtils;
 import consoperators.InConstantDistanceOperator;
@@ -164,13 +157,19 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 	        case rates: {
 
 	            // Get node rates
-	            double ra = rates.getValue(A.getNr()); // Free
-	            double rb = rates.getValue(B.getNr()); // Free
-	            double rc = rates.getValue(C.getNr()); // Free
-	            double rd = rates.getValue(D.getNr()); // Free
+	        	try {
+		            double ra = rates.getValue(A.getNr()); // Free
+		            double rb = rates.getValue(B.getNr()); // Free
+		            double rc = rates.getValue(C.getNr()); // Free
+		            double rd = rates.getValue(D.getNr()); // Free
+		            
+		            // Can be overriden by an NER variant
+		            logJD = this.proposalRates(twindowSize, ta, tb, tc, td, te, ra, rb, rc, rd);
+	        	} catch (ArrayIndexOutOfBoundsException e) {
+	        		// can happen when third party operator does not put the root as highest numbered node
+	        		return Double.NEGATIVE_INFINITY;
+	        	}
 
-	            // Can be overriden by an NER variant
-	            logJD = this.proposalRates(twindowSize, ta, tb, tc, td, te, ra, rb, rc, rd);
 
 	            // Ensure that the constraints have not been broken
 	            if (!this.validateProposalRates(ta, tb, tc, td, te)) return Double.NEGATIVE_INFINITY;
