@@ -1,0 +1,175 @@
+<beast version='2.0'
+       namespace='beast.app.beauti:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.branchratemodel:beast.base.evolution.speciation:beast.base.evolution.tree.coalescent:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.evolution:beast.base.math.distributions:orc.operators:orc.ner'>
+
+
+    <!-- Clock models -->
+    <mergewith point='clockModelTemplates'>
+
+          <!-- Optimised relaxed clock -->
+        <subtemplate id='OptimisedRelaxedClock' class='beast.base.evolution.branchratemodel.UCRelaxedClockModel'
+                     mainid='OptimisedRelaxedClock.c:$(n)'
+                     suppressInputs='
+                     beast.base.evolution.branchratemodel.UCRelaxedClockModel.numberOfDiscreteRates,
+                     beast.base.evolution.branchratemodel.UCRelaxedClockModel.rateQuantiles,
+                     beast.base.evolution.branchratemodel.UCRelaxedClockModel.rates,
+                     beast.base.evolution.branchratemodel.UCRelaxedClockModel.normalize,
+                     beast.base.evolution.branchratemodel.UCRelaxedClockModel.distr,
+                     beast.base.evolution.branchratemodel.UCRelaxedClockModel.rateQuantiles'>
+            <![CDATA[
+
+				<branchRateModel id="OptimisedRelaxedClock.c:$(n)" spec="beast.base.evolution.branchratemodel.UCRelaxedClockModel" rates="@ORCRates.c:$(n)" tree="@Tree.t:$(n)">
+						<LogNormal id="ORCLogNormalDistributionModel.c:$(n)" S="@ORCsigma.c:$(n)" meanInRealSpace="true" name="distr">
+							<M spec="parameter.RealParameter" estimate="false">1</M>
+						</LogNormal>
+					<parameter id="ORCucldMean.c:$(n)" estimate="false" name="clock.rate">1.0</parameter>
+				</branchRateModel>
+
+
+				<parameter id="ORCsigma.c:$(n)" name="stateNode" lower="0.0">0.2</parameter>
+				<parameter id="ORCRates.c:$(n)" name="stateNode" lower="0.0">0.5</parameter>
+
+
+				<prior id="ORCRatePriorDistribution.c:$(n)" name="distribution" x="@ORCRates.c:$(n)">
+					<LogNormal S="@ORCsigma.c:$(n)"  meanInRealSpace="true" name="distr">
+						<M spec="parameter.RealParameter" estimate="false">1</M>
+					</LogNormal>
+				</prior>
+
+
+				<prior id="ORCsigmaPrior.c:$(n)" name="distribution" x="@ORCsigma.c:$(n)">
+
+					<distr spec="beast.base.inference.distribution.Gamma">
+						<parameter name='alpha' value="5" estimate='false'/> <!-- shape -->
+						<parameter name='beta' value="0.05" estimate='false'/> <!-- scale -->
+					</distr>
+
+				</prior>
+
+				<prior id="ORCucldMeanPrior.c:$(n)" name="distribution" x="@ORCucldMean.c:$(n)">
+					<Gamma alpha="0.1" beta="100.0" name="distr"/>
+				</prior>
+
+
+
+				<operator id="ORCucldMeanScaler.c:$(n)" spec="ScaleOperator" parameter="@ORCucldMean.c:$(n)" scaleFactor="0.5" weight="5.0"/>
+
+
+
+				<operator id="ORCAdaptableOperatorSampler_sigma.c:$(n)" spec="beast.base.evolution.operator.AdaptableOperatorSampler" weight="3.0">
+					<parameter idref="ORCsigma.c:$(n)" />
+					<operator id="ORCucldStdevScaler.c:$(n)" spec="orc.consoperators.UcldScalerOperator" distr="@ORCLogNormalDistributionModel.c:$(n)" rates="@ORCRates.c:$(n)" scaleFactor="0.5" stdev="@ORCsigma.c:$(n)" weight="1.0">
+						<kernel spec="beast.base.inference.operator.kernel.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
+					</operator>
+					<operator id="ORCUcldStdevRandomWalk.c:$(n)" spec="beast.base.inference.operator.kernel.BactrianRandomWalkOperator" parameter="@ORCsigma.c:$(n)" weight="1" scaleFactor="0.1">
+						<kernelDistribution spec="beast.base.inference.operator.kernel.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
+					</operator>
+					<operator id="ORCUcldStdevScale.c:$(n)" spec="beast.base.evolution.operator.kernel.BactrianScaleOperator" scaleFactor="0.5" parameter="@ORCsigma.c:$(n)" weight="1">
+						<kernelDistribution spec="beast.base.inference.operator.kernel.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
+					</operator>
+					<operator id="ORCSampleFromPriorOperator_sigma.c:$(n)" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCsigma.c:$(n)" prior2="@ORCsigmaPrior.c:$(n)" weight="1"/>
+				</operator>
+
+
+				<operator id="ORCAdaptableOperatorSampler_rates_root.c:$(n)" spec="beast.base.evolution.operator.AdaptableOperatorSampler" parameter="@ORCRates.c:$(n)" tree="@Tree.t:$(n)" weight="1.0">
+					<operator id="ORCRootOperator1.c:$(n)" spec="orc.consoperators.SimpleDistance" twindowSize="0.005" tree="@Tree.t:$(n)" clockModel="@OptimisedRelaxedClock.c:$(n)" rates="@ORCRates.c:$(n)"  weight="1">
+						<kernel spec="beast.base.inference.operator.kernel.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
+					</operator>
+					<operator id="ORCRootOperator2.c:$(n)" spec="orc.consoperators.SmallPulley" dwindowSize="0.005" tree="@Tree.t:$(n)" clockModel="@OptimisedRelaxedClock.c:$(n)" rates="@ORCRates.c:$(n)"  weight="1">
+						<kernel spec="beast.base.inference.operator.kernel.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
+					</operator>
+				</operator>
+
+
+
+				<operator id="ORCAdaptableOperatorSampler_rates_internal.c:$(n)" spec="beast.base.evolution.operator.AdaptableOperatorSampler" parameter="@ORCRates.c:$(n)" tree="@Tree.t:$(n)" weight="20">
+					<operator id="ORCInternalnodesOperator.c:$(n)" spec="orc.consoperators.InConstantDistanceOperator" twindowSize="0.005"  tree="@Tree.t:$(n)" clockModel="@OptimisedRelaxedClock.c:$(n)" rates="@ORCRates.c:$(n)"  weight="1">
+						<kernel spec="beast.base.inference.operator.kernel.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
+					</operator>
+					<operator id="ORCRatesRandomWalk.c:$(n)" spec="beast.base.inference.operator.kernel.BactrianRandomWalkOperator" parameter="@ORCRates.c:$(n)" weight="1" scaleFactor="0.1">
+						<kernelDistribution spec="beast.base.inference.operator.kernel.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
+					</operator>
+					<operator id="ORCRatesScale.c:$(n)" spec="beast.base.evolution.operator.kernel.BactrianScaleOperator" scaleFactor="0.5" parameter="@ORCRates.c:$(n)" weight="1">
+						<kernelDistribution spec="beast.base.inference.operator.kernel.KernelDistribution$Bactrian" m="0.95" mode="bactrian_normal"/>
+					</operator>
+					<operator id="ORCSampleFromPriorOperator.rates.c:$(n)" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCRates.c:$(n)" np="1" prior2="@ORCRatePriorDistribution.c:$(n)" weight="1"/>
+				</operator>
+
+
+				<operator id="ORCNER_null.c:$(n)" spec="Exchange" tree="@Tree.t:$(n)" weight="5"/>
+				<operator id="ORCNER_dAE_dBE_dCE.c:$(n)" spec="orc.ner.NEROperator_dAE_dBE_dCE" tree="@Tree.t:$(n)" rates="@ORCRates.c:$(n)" weight="5"/>
+
+
+
+				<log id="ORCRatesStat.c:$(n)" spec="beast.base.evolution.RateStatistic" branchratemodel="@OptimisedRelaxedClock.c:$(n)" tree="@Tree.t:$(n)"/>
+
+			]]>
+
+
+
+				<!-- Temporarily commenting out until tree metric issue is resolved
+				<operator id="ORCAdaptableOperatorSampler_NER.c:$(n)" spec="beast.base.evolution.operator.AdaptableOperatorSampler" tree="@Tree.t:$(n)" weight="15">
+					<metric spec="beastlabs.evolution.tree.RNNIMetric" taxonset="@TaxonSet.$(n)"/>
+					<operator id="ORCNER_null.c:$(n)" spec="Exchange" tree="@Tree.t:$(n)" weight="1"/>
+					<operator id="ORCNER_dAE_dBE_dCE.c:$(n)" spec="orc.ner.NEROperator_dAE_dBE_dCE" tree="@Tree.t:$(n)" rates="@ORCRates.c:$(n)" weight="1"/>
+				</operator>
+				-->
+
+            <connect srcID='ORCucldMean.c:$(n)' targetID='state' inputName='stateNode'
+                     if='inlikelihood(ORCucldMean.c:$(n)) and ORCucldMean.c:$(n)/estimate=true'/>
+            <connect srcID='ORCsigma.c:$(n)' targetID='state' inputName='stateNode'
+                     if='inlikelihood(ORCsigma.c:$(n)) and ORCsigma.c:$(n)/estimate=true'/>
+            <connect srcID='ORCRates.c:$(n)' targetID='state' inputName='stateNode'
+                     if='inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'/>
+
+            <connect srcID='ORCucldMeanScaler.c:$(n)' targetID='mcmc' inputName='operator'
+                     if='inlikelihood(ORCucldMean.c:$(n)) and ORCucldMean.c:$(n)/estimate=true'>Scale clock rate of partition c:$(n)
+            </connect>
+
+
+
+
+
+			<connect srcID='ORCAdaptableOperatorSampler_sigma.c:$(n)' targetID='mcmc' inputName='operator'
+                     if='inlikelihood(ORCsigma.c:$(n)) and ORCsigma.c:$(n)/estimate=true'> Adaptive weight operator for the relaxed clock standard deviation of partition c:$(n)
+            </connect>
+			<connect srcID='ORCAdaptableOperatorSampler_rates_root.c:$(n)' targetID='mcmc' inputName='operator'
+                    if='inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the root node and incident branch rates of partition c:$(n)
+            </connect>
+			<connect srcID='ORCAdaptableOperatorSampler_rates_internal.c:$(n)' targetID='mcmc' inputName='operator'
+                     if='inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the internal nodes and branch rates of partition c:$(n)
+            </connect>
+			<connect srcID='ORCAdaptableOperatorSampler_NER.c:$(n)' targetID='mcmc' inputName='operator'
+                     if='inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true and inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the tree of partition c:$(n) (Narrow Exchange Rates)
+            </connect>
+
+			<!-- Destroy the standard narrow exchange operator -->
+			<connect method="orc.operators.MetaNEROperator.customConnector"/>
+
+
+            <connect srcID='Tree.t:$(n)' targetID='OptimisedRelaxedClock.c:$(n)' inputName='tree' if='inlikelihood(OptimisedRelaxedClock.c:$(n))'/>
+            <connect srcID='Tree.t:$(n)' targetID='rate.c:$(n)' inputName='tree' if='inlikelihood(OptimisedRelaxedClock.c:$(n))'/>
+
+            <connect srcID='ORCucldMean.c:$(n)' targetID='tracelog' inputName='log'
+                     if='inlikelihood(ORCucldMean.c:$(n)) and ORCucldMean.c:$(n)/estimate=true'/>
+            <connect srcID='ORCsigma.c:$(n)' targetID='tracelog' inputName='log' if='inlikelihood(ORCsigma.c:$(n))'/>
+            <connect srcID='ORCRatesStat.c:$(n)' targetID='tracelog' inputName='log' if='inlikelihood(ORCRates.c:$(n))'/>
+
+
+            <connect srcID='ORCsigmaPrior.c:$(n)' targetID='prior' inputName='distribution'
+                     if='inlikelihood(ORCsigma.c:$(n))'>Optimised lognormal relaxed clock stdev of partition c:$(n)
+            </connect>
+            <connect srcID='ORCucldMeanPrior.c:$(n)' targetID='prior' inputName='distribution'
+                     if='inlikelihood(ORCucldMean.c:$(n)) and inlikelihood(Tree.t:$(n)) and ORCucldMean.c:$(n)/estimate=true'>
+					Optimised lognormal relaxed clock mean of partition c:$(n)
+            </connect>
+            <connect srcID='ORCRatePriorDistribution.c:$(n)' targetID='prior' inputName='distribution'
+                     if='inlikelihood(ORCRates.c:$(n)) and inlikelihood(Tree.t:$(n)) and ORCRates.c:$(n)/estimate=true'>
+					Optimised lognormal relaxed clock rates of partition c:$(n)
+            </connect>
+
+
+            <connect srcID='OptimisedRelaxedClock.c:$(n)' targetID='TreeWithMetaDataLogger.t:$(n)' inputName='branchratemodel'
+                     if='inposterior(OptimisedRelaxedClock.c:$(n))'/>
+        </subtemplate>
+	</mergewith>
+</beast>

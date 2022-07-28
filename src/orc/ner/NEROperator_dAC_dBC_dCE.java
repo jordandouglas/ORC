@@ -1,6 +1,6 @@
 package orc.ner;
 
-import beast.util.Randomizer;
+import beast.base.util.Randomizer;
 import orc.operators.MetaNEROperator;
 
 public class NEROperator_dAC_dBC_dCE extends MetaNEROperator {

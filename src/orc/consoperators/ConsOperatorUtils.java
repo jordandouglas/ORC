@@ -1,16 +1,18 @@
 package orc.consoperators;
 
-import beast.math.distributions.LogNormalDistributionModel;
-import beast.math.distributions.ParametricDistribution;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math3.util.FastMath;
+
+import beast.base.inference.distribution.ParametricDistribution;
+import beast.base.inference.distribution.LogNormalDistributionModel;
+
 
 public class ConsOperatorUtils {
     final private static double SQRT2 = Math.sqrt(2.0);
     final static private double EPSILON = 1e-8;
 
     public static double getHRForLN (double rNew, double qOld, ParametricDistribution distribution) {
-        double stdev = ((LogNormalDistributionModel) distribution).SParameterInput.get().getValue();
+        double stdev = ((LogNormalDistributionModel) distribution).SParameterInput.get().getArrayValue();
         double miu = - 0.5 * stdev * stdev;
 
         double b = FastMath.log(rNew);

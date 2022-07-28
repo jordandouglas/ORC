@@ -1,22 +1,25 @@
 package orc.consoperators;
 
-import beast.core.Citation;
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.StateNode;
-import beast.core.parameter.CompoundRealParameter;
-import beast.core.parameter.RealParameter;
-import beast.evolution.branchratemodel.UCRelaxedClockModel;
-import beast.evolution.operators.KernelDistribution;
-import beast.evolution.operators.TreeOperator;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
-import beast.math.distributions.LogNormalDistributionModel;
-import beast.math.distributions.ParametricDistribution;
-import beast.util.Randomizer;
-import org.apache.commons.math.MathException;
+
 import java.text.DecimalFormat;
 import java.util.List;
+
+import org.apache.commons.math.MathException;
+
+import beast.base.core.Citation;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.evolution.branchratemodel.UCRelaxedClockModel;
+import beast.base.evolution.operator.TreeOperator;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.Tree;
+import beast.base.inference.StateNode;
+import beast.base.inference.distribution.LogNormalDistributionModel;
+import beast.base.inference.distribution.ParametricDistribution;
+import beast.base.inference.operator.kernel.KernelDistribution;
+import beast.base.inference.parameter.CompoundRealParameter;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.util.Randomizer;
 
 
 @Description("For internal nodes: propose a new node time")
@@ -76,7 +79,7 @@ public class InConstantDistanceOperator extends TreeOperator {
 
     @Override
     public double proposal() {
-        final Tree tree = treeInput.get(this);
+        final Tree tree = treeInput.get();
         ParametricDistribution rateDistribution = clockModelInput.get().rateDistInput.get();
         int nodeCount = tree.getNodeCount(); //return the number of nodes in the tree
         int branchCount = nodeCount - 1; //the number of branches of the tree
@@ -258,6 +261,7 @@ public class InConstantDistanceOperator extends TreeOperator {
 
         }
 
+        
 
         // Step4: calculate the Hastings ratio
         double nu =(upper - t_x) * (t_x - t_j) * (t_x - t_k) ;

@@ -4,18 +4,20 @@ package orc.operators;
 import java.util.ArrayList;
 import java.util.List;
 
-import beast.app.beauti.BeautiDoc;
-import beast.core.BEASTInterface;
-import beast.core.Input;
-import beast.core.Input.Validate;
-import beast.core.parameter.RealParameter;
-import beast.evolution.operators.Exchange;
-import beast.evolution.operators.KernelDistribution;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
-import beast.math.distributions.LogNormalDistributionModel;
-import beast.math.distributions.ParametricDistribution;
-import beast.util.Randomizer;
+
+
+import beast.base.core.BEASTInterface;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.evolution.operator.Exchange;
+import beast.base.inference.operator.kernel.KernelDistribution;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.Tree;
+import beast.base.inference.distribution.LogNormalDistributionModel;
+import beast.base.inference.distribution.ParametricDistribution;
+import beast.base.util.Randomizer;
+import beastfx.app.inputeditor.BeautiDoc;
 import orc.consoperators.ConsOperatorUtils;
 import orc.consoperators.InConstantDistanceOperator;
 import orc.consoperators.PiecewiseLinearDistribution;
@@ -91,7 +93,7 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 
 		// Window size, tree, and sub-operator (use this operator if unspecified)
 		this.twindowSize = twindowSizeInput.get() == null ? 0 : twindowSizeInput.get();
-		this.tree =  treeInput.get(this);
+		this.tree =  treeInput.get();
 		this.proposalKernel = proposalKernelInput.get();
 		this.optimise = optimiseInput.get();
 
@@ -102,7 +104,7 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 	public double proposal() {
 
 
-		this.tree =  treeInput.get(this);
+		this.tree =  treeInput.get();
 
 		// Get nodes which operator may apply to
         final List<Node> applicableNodesBeforeOperation = getApplicableNodes(this.tree);

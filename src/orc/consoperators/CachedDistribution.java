@@ -7,10 +7,10 @@ import org.apache.commons.math.MathException;
 import org.apache.commons.math.distribution.ContinuousDistribution;
 import org.apache.commons.math.distribution.Distribution;
 
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Input.Validate;
-import beast.math.distributions.ParametricDistribution;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.inference.distribution.ParametricDistribution;
 
 @Description("Caches parametric distribution for inverscumulative methods.")
 public class CachedDistribution extends ParametricDistribution {

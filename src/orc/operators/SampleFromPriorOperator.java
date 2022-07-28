@@ -5,19 +5,20 @@ import java.util.List;
 
 import org.apache.commons.math.MathException;
 
-import beast.core.Input;
-import beast.core.Input.Validate;
-import beast.core.Operator;
-import beast.core.StateNode;
-import beast.core.parameter.IntegerParameter;
-import beast.core.parameter.Parameter;
-import beast.core.parameter.RealParameter;
-import beast.core.util.Log;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
-import beast.math.distributions.ParametricDistribution;
-import beast.math.distributions.Prior;
-import beast.util.Randomizer;
+
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.inference.Operator;
+import beast.base.inference.StateNode;
+import beast.base.inference.parameter.IntegerParameter;
+import beast.base.inference.parameter.Parameter;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.core.Log;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.Tree;
+import beast.base.inference.distribution.ParametricDistribution;
+import beast.base.inference.distribution.Prior;
+import beast.base.util.Randomizer;
 
 
 

@@ -1,7 +1,7 @@
 package orc.ner;
 
-import beast.core.Citation;
-import beast.util.Randomizer;
+import beast.base.core.Citation;
+import beast.base.util.Randomizer;
 import orc.operators.MetaNEROperator;
 
 public class NEROperator_dAE_dBE_dCE extends MetaNEROperator {

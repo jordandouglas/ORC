@@ -1,4 +1,65 @@
-<package name='ORC' version='1.0.3'>
-	<depends on='beast2' atleast='2.6.0'/>
-	<depends on='BEASTLabs' atleast='1.9.7'/>
+<package name='ORC' version='1.1.0'>
+	<depends on='BEAST.base' atleast='2.7.0'/>
+	<depends on='BEAST.app' atleast='2.7.0'/>
+	<depends on='BEASTLabs' atleast='2.0.0'/>
+
+	<service type="beast.base.core.BEASTInterface">
+	    <provider classname="orc.consoperators.InConstantDistanceOperator"/>
+	    <provider classname="orc.consoperators.SmallPulley"/>
+	    <provider classname="orc.consoperators.SimpleDistance"/>
+	    <provider classname="orc.consoperators.UcldScalerOperator"/>
+	    <provider classname="orc.consoperators.PiecewiseLinearDistribution"/>
+	    <provider classname="orc.inference.TipRateLogger"/>
+	    <provider classname="orc.ner.NEROperator_dAB"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAC"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAC_dAE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAC_dAE_dBC"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAC_dAE_dBC_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAC_dAE_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAC_dBC"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAC_dBC_dBE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAC_dBC_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAC_dBE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAC_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAE_dBC"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAE_dBC_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dAE_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dBC"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dBC_dBE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dBC_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dBE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dBE_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAB_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAC"/>
+	    <provider classname="orc.ner.NEROperator_dAC_dAE"/>
+	    <provider classname="orc.ner.NEROperator_dAC_dAE_dBC"/>
+	    <provider classname="orc.ner.NEROperator_dAC_dAE_dBC_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAC_dAE_dBE"/>
+	    <provider classname="orc.ner.NEROperator_dAC_dAE_dBE_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAC_dAE_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAC_dBC"/>
+	    <provider classname="orc.ner.NEROperator_dAC_dBC_dBE"/>
+	    <provider classname="orc.ner.NEROperator_dAC_dBC_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAC_dBE"/>
+	    <provider classname="orc.ner.NEROperator_dAC_dBE_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAC_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAE"/>
+	    <provider classname="orc.ner.NEROperator_dAE_dBC"/>
+	    <provider classname="orc.ner.NEROperator_dAE_dBC_dBE"/>
+	    <provider classname="orc.ner.NEROperator_dAE_dBC_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAE_dBE"/>
+	    <provider classname="orc.ner.NEROperator_dAE_dBE_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dAE_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dBC"/>
+	    <provider classname="orc.ner.NEROperator_dBC_dBE"/>
+	    <provider classname="orc.ner.NEROperator_dBC_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dBE"/>
+	    <provider classname="orc.ner.NEROperator_dBE_dCE"/>
+	    <provider classname="orc.ner.NEROperator_dCE"/>
+	    <provider classname="orc.operators.MetaNEROperator"/>
+	    <provider classname="orc.operators.SampleFromPriorOperator"/>
+	</service>
+
+
 </package>

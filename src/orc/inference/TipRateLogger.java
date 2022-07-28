@@ -2,15 +2,17 @@ package orc.inference;
 
 
 import java.io.PrintStream;
-import beast.evolution.tree.Tree;
-import beast.core.parameter.RealParameter;
-import beast.core.parameter.IntegerParameter;
-import beast.evolution.branchratemodel.BranchRateModel;
-import beast.core.Input;
-import beast.core.Description;
-import beast.core.Function;
-import beast.core.Loggable;
-import beast.core.BEASTObject;
+
+import beast.base.evolution.tree.Tree;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.inference.parameter.IntegerParameter;
+import beast.base.evolution.branchratemodel.BranchRateModel;
+import beast.base.core.Input;
+import beast.base.core.Description;
+import beast.base.core.Function;
+import beast.base.core.Loggable;
+import beast.base.core.BEASTObject;
+
 
 @Description("Logs all rates associated with the leaves of a tree. Number of dimensions = number of taxa. If clock is specified then logger willlog actual rates instead of the parameter itself")
 public class TipRateLogger extends BEASTObject implements Loggable, Function
