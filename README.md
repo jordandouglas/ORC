@@ -16,6 +16,8 @@ Also see BEAST 2 [blog post](https://www.beast2.org/2020/12/15/ORC.html)
 
 
 
+The main branch of this repository is for BEAST 2.7. To see example sessions and code compatible with 2.6, please refer to the v2.6 branch.
+
 
 
 
