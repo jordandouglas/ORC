@@ -1,0 +1,277 @@
+#
+#model:
+#
+#<?xml version="1.0" encoding="UTF-8" standalone="no"?><input id="posterior" spec="beast.core.util.CompoundDistribution">
+#    <distribution id="prior" spec="beast.core.util.CompoundDistribution">
+#        <distribution id="YuleModel.t:benchmark" spec="beast.evolution.speciation.YuleModel">
+#            <parameter id="birthRate.t:benchmark" name="birthDiffRate" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#            <tree id="Tree.t:benchmark" spec="beast.evolution.tree.Tree">
+#                <taxonset id="TaxonSet.benchmark" spec="beast.evolution.alignment.TaxonSet">
+#                </taxonset>
+#            </tree>
+#        </distribution>
+#        <prior id="YuleBirthRatePrior.t:benchmark" name="distribution" x="@birthRate.t:benchmark">
+#            <LogNormal id="LogNormalDistributionModel.2" name="distr">
+#                <parameter estimate="false" id="RealParameter.17" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter.18" name="S" spec="beast.core.parameter.RealParameter">1.25</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior" name="distribution">
+#            <parameter id="kappa.t:kiaal_1stpos" lower="0.0" name="x" spec="beast.core.parameter.RealParameter">2.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel" name="distr">
+#                <parameter estimate="false" id="RealParameter" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter1" name="S" spec="beast.core.parameter.RealParameter">1.25</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior1" name="distribution">
+#            <parameter dimension="4" id="freqParameter.t:kiaal_1stpos" name="x" spec="beast.core.parameter.RealParameter">0.25</parameter>
+#            <Dirichlet id="Dirichlet" name="distr">
+#                <parameter dimension="4" id="RealParameter2" lower="0.0" name="alpha" spec="beast.core.parameter.RealParameter" upper="0.0">10.0 10.0 10.0 10.0</parameter>
+#            </Dirichlet>
+#        </prior>
+#        <prior id="Prior2" name="distribution">
+#            <parameter id="clockRate.t:kiaal_1stpos" name="x" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel1" meanInRealSpace="true" name="distr">
+#                <parameter estimate="false" id="RealParameter3" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter4" name="S" spec="beast.core.parameter.RealParameter">0.6</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior3" name="distribution">
+#            <parameter id="kappa.t:ficd_1stpos" lower="0.0" name="x" spec="beast.core.parameter.RealParameter">2.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel2" name="distr">
+#                <parameter estimate="false" id="RealParameter5" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter6" name="S" spec="beast.core.parameter.RealParameter">1.25</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior4" name="distribution">
+#            <parameter dimension="4" id="freqParameter.t:ficd_1stpos" name="x" spec="beast.core.parameter.RealParameter">0.25</parameter>
+#            <Dirichlet id="Dirichlet1" name="distr">
+#                <parameter dimension="4" id="RealParameter7" lower="0.0" name="alpha" spec="beast.core.parameter.RealParameter" upper="0.0">10.0 10.0 10.0 10.0</parameter>
+#            </Dirichlet>
+#        </prior>
+#        <prior id="Prior5" name="distribution">
+#            <parameter id="clockRate.t:ficd_1stpos" name="x" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel3" meanInRealSpace="true" name="distr">
+#                <parameter estimate="false" id="RealParameter8" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter9" name="S" spec="beast.core.parameter.RealParameter">0.6</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior6" name="distribution">
+#            <parameter id="kappa.t:gtdc2_1stpos" lower="0.0" name="x" spec="beast.core.parameter.RealParameter">2.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel4" name="distr">
+#                <parameter estimate="false" id="RealParameter10" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter11" name="S" spec="beast.core.parameter.RealParameter">1.25</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior7" name="distribution">
+#            <parameter dimension="4" id="freqParameter.t:gtdc2_1stpos" name="x" spec="beast.core.parameter.RealParameter">0.25</parameter>
+#            <Dirichlet id="Dirichlet2" name="distr">
+#                <parameter dimension="4" id="RealParameter12" lower="0.0" name="alpha" spec="beast.core.parameter.RealParameter" upper="0.0">10.0 10.0 10.0 10.0</parameter>
+#            </Dirichlet>
+#        </prior>
+#        <prior id="Prior8" name="distribution">
+#            <parameter id="clockRate.t:gtdc2_1stpos" name="x" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel5" meanInRealSpace="true" name="distr">
+#                <parameter estimate="false" id="RealParameter13" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter14" name="S" spec="beast.core.parameter.RealParameter">0.6</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior9" name="distribution">
+#            <parameter id="kappa.t:ryr3_1stpos" lower="0.0" name="x" spec="beast.core.parameter.RealParameter">2.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel6" name="distr">
+#                <parameter estimate="false" id="RealParameter15" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter16" name="S" spec="beast.core.parameter.RealParameter">1.25</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior10" name="distribution">
+#            <parameter dimension="4" id="freqParameter.t:ryr3_1stpos" name="x" spec="beast.core.parameter.RealParameter">0.25</parameter>
+#            <Dirichlet id="Dirichlet3" name="distr">
+#                <parameter dimension="4" id="RealParameter17" lower="0.0" name="alpha" spec="beast.core.parameter.RealParameter" upper="0.0">10.0 10.0 10.0 10.0</parameter>
+#            </Dirichlet>
+#        </prior>
+#        <prior id="Prior11" name="distribution">
+#            <parameter id="clockRate.t:ryr3_1stpos" name="x" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel7" meanInRealSpace="true" name="distr">
+#                <parameter estimate="false" id="RealParameter18" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter19" name="S" spec="beast.core.parameter.RealParameter">0.6</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior12" name="distribution">
+#            <parameter id="kappa.t:enc1_1stpos" lower="0.0" name="x" spec="beast.core.parameter.RealParameter">2.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel8" name="distr">
+#                <parameter estimate="false" id="RealParameter20" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter21" name="S" spec="beast.core.parameter.RealParameter">1.25</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior13" name="distribution">
+#            <parameter dimension="4" id="freqParameter.t:enc1_1stpos" name="x" spec="beast.core.parameter.RealParameter">0.25</parameter>
+#            <Dirichlet id="Dirichlet4" name="distr">
+#                <parameter dimension="4" id="RealParameter22" lower="0.0" name="alpha" spec="beast.core.parameter.RealParameter" upper="0.0">10.0 10.0 10.0 10.0</parameter>
+#            </Dirichlet>
+#        </prior>
+#        <prior id="Prior14" name="distribution">
+#            <parameter id="clockRate.t:enc1_1stpos" name="x" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel9" meanInRealSpace="true" name="distr">
+#                <parameter estimate="false" id="RealParameter23" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter24" name="S" spec="beast.core.parameter.RealParameter">0.6</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior15" name="distribution">
+#            <parameter id="kappa.t:btbd7_1stpos" lower="0.0" name="x" spec="beast.core.parameter.RealParameter">2.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel10" name="distr">
+#                <parameter estimate="false" id="RealParameter25" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter26" name="S" spec="beast.core.parameter.RealParameter">1.25</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior16" name="distribution">
+#            <parameter dimension="4" id="freqParameter.t:btbd7_1stpos" name="x" spec="beast.core.parameter.RealParameter">0.25</parameter>
+#            <Dirichlet id="Dirichlet5" name="distr">
+#                <parameter dimension="4" id="RealParameter27" lower="0.0" name="alpha" spec="beast.core.parameter.RealParameter" upper="0.0">10.0 10.0 10.0 10.0</parameter>
+#            </Dirichlet>
+#        </prior>
+#        <prior id="Prior17" name="distribution">
+#            <parameter id="clockRate.t:btbd7_1stpos" name="x" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel11" meanInRealSpace="true" name="distr">
+#                <parameter estimate="false" id="RealParameter28" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter29" name="S" spec="beast.core.parameter.RealParameter">0.6</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior18" name="distribution">
+#            <parameter id="kappa.t:gpr85_1stpos" lower="0.0" name="x" spec="beast.core.parameter.RealParameter">2.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel12" name="distr">
+#                <parameter estimate="false" id="RealParameter30" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter31" name="S" spec="beast.core.parameter.RealParameter">1.25</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior19" name="distribution">
+#            <parameter dimension="4" id="freqParameter.t:gpr85_1stpos" name="x" spec="beast.core.parameter.RealParameter">0.25</parameter>
+#            <Dirichlet id="Dirichlet6" name="distr">
+#                <parameter dimension="4" id="RealParameter32" lower="0.0" name="alpha" spec="beast.core.parameter.RealParameter" upper="0.0">10.0 10.0 10.0 10.0</parameter>
+#            </Dirichlet>
+#        </prior>
+#        <prior id="Prior20" name="distribution">
+#            <parameter id="clockRate.t:gpr85_1stpos" name="x" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel13" meanInRealSpace="true" name="distr">
+#                <parameter estimate="false" id="RealParameter33" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter34" name="S" spec="beast.core.parameter.RealParameter">0.6</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior21" name="distribution">
+#            <parameter id="kappa.t:tbr1b_1stpos" lower="0.0" name="x" spec="beast.core.parameter.RealParameter">2.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel14" name="distr">
+#                <parameter estimate="false" id="RealParameter35" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter36" name="S" spec="beast.core.parameter.RealParameter">1.25</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="Prior22" name="distribution">
+#            <parameter dimension="4" id="freqParameter.t:tbr1b_1stpos" name="x" spec="beast.core.parameter.RealParameter">0.25</parameter>
+#            <Dirichlet id="Dirichlet7" name="distr">
+#                <parameter dimension="4" id="RealParameter37" lower="0.0" name="alpha" spec="beast.core.parameter.RealParameter" upper="0.0">10.0 10.0 10.0 10.0</parameter>
+#            </Dirichlet>
+#        </prior>
+#        <prior id="Prior23" name="distribution">
+#            <parameter id="clockRate.t:tbr1b_1stpos" name="x" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#            <LogNormal id="LogNormalDistributionModel15" meanInRealSpace="true" name="distr">
+#                <parameter estimate="false" id="RealParameter38" name="M" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter39" name="S" spec="beast.core.parameter.RealParameter">0.6</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="ucldStdevPrior.c:benchmark" name="distribution">
+#            <parameter id="ucldStdev.c:benchmark" lower="0.0" name="x" spec="beast.core.parameter.RealParameter">0.1</parameter>
+#            <Gamma id="Gamma.2" name="distr">
+#                <parameter estimate="false" id="RealParameter.10" name="alpha" spec="beast.core.parameter.RealParameter">0.5396</parameter>
+#                <parameter estimate="false" id="RealParameter.11" name="beta" spec="beast.core.parameter.RealParameter">0.3819</parameter>
+#            </Gamma>
+#        </prior>
+#        <prior id="FastRatePriorDistrbution.c:dna" name="distribution">
+#            <parameter dimension="120" id="rates.c:benchmark" name="x" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#            <LogNormal S="@ucldStdev.c:benchmark" id="LogNormalDistributionModel.rates" meanInRealSpace="true" name="distr">
+#                <parameter id="RealParameter40" lower="0.0" name="M" spec="beast.core.parameter.RealParameter" upper="0.0">1.0</parameter>
+#            </LogNormal>
+#        </prior>
+#    </distribution>
+#    <distribution id="likelihood" spec="beast.core.util.CompoundDistribution" useThreads="true">
+#        <distribution id="treeLikelihood.kiaal_1stpos" spec="beast.evolution.likelihood.TreeLikelihood" tree="@Tree.t:benchmark">
+#            <data data="@benchmark" filter="5794-6768" id="FilteredAlignment" spec="beast.evolution.alignment.FilteredAlignment"/>
+#            <siteModel gammaCategoryCount="1" id="SiteModel" mutationRate="@clockRate.t:kiaal_1stpos" spec="beast.evolution.sitemodel.SiteModel">
+#                <parameter estimate="false" id="RealParameter41" name="shape" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <substModel id="HKY" kappa="@kappa.t:kiaal_1stpos" spec="beast.evolution.substitutionmodel.HKY">
+#                    <frequencies frequencies="@freqParameter.t:kiaal_1stpos" id="Frequencies" spec="beast.evolution.substitutionmodel.Frequencies"/>
+#                </substModel>
+#            </siteModel>
+#            <branchRateModel id="RelaxedClock.c:benchmark" rates="@rates.c:benchmark" spec="beast.evolution.branchratemodel.UCRelaxedClockModel" tree="@Tree.t:benchmark">
+#                <LogNormal S="@ucldStdev.c:benchmark" id="LogNormalDistributionModel.c:calsim" meanInRealSpace="true" name="distr">
+#                    <parameter estimate="false" id="RealParameter.9" lower="0.0" name="M" spec="beast.core.parameter.RealParameter" upper="1.0">1.0</parameter>
+#                </LogNormal>
+#                <parameter estimate="false" id="ucldMean.c:benchmark" name="clock.rate" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#            </branchRateModel>
+#        </distribution>
+#        <distribution branchRateModel="@RelaxedClock.c:benchmark" id="treeLikelihood.ficd_1stpos" spec="beast.evolution.likelihood.TreeLikelihood" tree="@Tree.t:benchmark">
+#            <data data="@benchmark" filter="2461-3207" id="FilteredAlignment1" spec="beast.evolution.alignment.FilteredAlignment"/>
+#            <siteModel gammaCategoryCount="1" id="SiteModel1" mutationRate="@clockRate.t:ficd_1stpos" spec="beast.evolution.sitemodel.SiteModel">
+#                <parameter estimate="false" id="RealParameter42" name="shape" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <substModel id="HKY1" kappa="@kappa.t:ficd_1stpos" spec="beast.evolution.substitutionmodel.HKY">
+#                    <frequencies frequencies="@freqParameter.t:ficd_1stpos" id="Frequencies1" spec="beast.evolution.substitutionmodel.Frequencies"/>
+#                </substModel>
+#            </siteModel>
+#        </distribution>
+#        <distribution branchRateModel="@RelaxedClock.c:benchmark" id="treeLikelihood.gtdc2_1stpos" spec="beast.evolution.likelihood.TreeLikelihood" tree="@Tree.t:benchmark">
+#            <data data="@benchmark" filter="3208-4095" id="FilteredAlignment2" spec="beast.evolution.alignment.FilteredAlignment"/>
+#            <siteModel gammaCategoryCount="1" id="SiteModel2" mutationRate="@clockRate.t:gtdc2_1stpos" spec="beast.evolution.sitemodel.SiteModel">
+#                <parameter estimate="false" id="RealParameter43" name="shape" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <substModel id="HKY2" kappa="@kappa.t:gtdc2_1stpos" spec="beast.evolution.substitutionmodel.HKY">
+#                    <frequencies frequencies="@freqParameter.t:gtdc2_1stpos" id="Frequencies2" spec="beast.evolution.substitutionmodel.Frequencies"/>
+#                </substModel>
+#            </siteModel>
+#        </distribution>
+#        <distribution branchRateModel="@RelaxedClock.c:benchmark" id="treeLikelihood.ryr3_1stpos" spec="beast.evolution.likelihood.TreeLikelihood" tree="@Tree.t:benchmark">
+#            <data data="@benchmark" filter="13171-14004" id="FilteredAlignment3" spec="beast.evolution.alignment.FilteredAlignment"/>
+#            <siteModel gammaCategoryCount="1" id="SiteModel3" mutationRate="@clockRate.t:ryr3_1stpos" spec="beast.evolution.sitemodel.SiteModel">
+#                <parameter estimate="false" id="RealParameter44" name="shape" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <substModel id="HKY3" kappa="@kappa.t:ryr3_1stpos" spec="beast.evolution.substitutionmodel.HKY">
+#                    <frequencies frequencies="@freqParameter.t:ryr3_1stpos" id="Frequencies3" spec="beast.evolution.substitutionmodel.Frequencies"/>
+#                </substModel>
+#            </siteModel>
+#        </distribution>
+#        <distribution branchRateModel="@RelaxedClock.c:benchmark" id="treeLikelihood.enc1_1stpos" spec="beast.evolution.likelihood.TreeLikelihood" tree="@Tree.t:benchmark">
+#            <data data="@benchmark" filter="1651-2460" id="FilteredAlignment4" spec="beast.evolution.alignment.FilteredAlignment"/>
+#            <siteModel gammaCategoryCount="1" id="SiteModel4" mutationRate="@clockRate.t:enc1_1stpos" spec="beast.evolution.sitemodel.SiteModel">
+#                <parameter estimate="false" id="RealParameter45" name="shape" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <substModel id="HKY4" kappa="@kappa.t:enc1_1stpos" spec="beast.evolution.substitutionmodel.HKY">
+#                    <frequencies frequencies="@freqParameter.t:enc1_1stpos" id="Frequencies4" spec="beast.evolution.substitutionmodel.Frequencies"/>
+#                </substModel>
+#            </siteModel>
+#        </distribution>
+#        <distribution branchRateModel="@RelaxedClock.c:benchmark" id="treeLikelihood.btbd7_1stpos" spec="beast.evolution.likelihood.TreeLikelihood" tree="@Tree.t:benchmark">
+#            <data data="@benchmark" filter="799-1650" id="FilteredAlignment5" spec="beast.evolution.alignment.FilteredAlignment"/>
+#            <siteModel gammaCategoryCount="1" id="SiteModel5" mutationRate="@clockRate.t:btbd7_1stpos" spec="beast.evolution.sitemodel.SiteModel">
+#                <parameter estimate="false" id="RealParameter46" name="shape" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <substModel id="HKY5" kappa="@kappa.t:btbd7_1stpos" spec="beast.evolution.substitutionmodel.HKY">
+#                    <frequencies frequencies="@freqParameter.t:btbd7_1stpos" id="Frequencies5" spec="beast.evolution.substitutionmodel.Frequencies"/>
+#                </substModel>
+#            </siteModel>
+#        </distribution>
+#        <distribution branchRateModel="@RelaxedClock.c:benchmark" id="treeLikelihood.gpr85_1stpos" spec="beast.evolution.likelihood.TreeLikelihood" tree="@Tree.t:benchmark">
+#            <data data="@benchmark" filter="4096-5166" id="FilteredAlignment6" spec="beast.evolution.alignment.FilteredAlignment"/>
+#            <siteModel gammaCategoryCount="1" id="SiteModel6" mutationRate="@clockRate.t:gpr85_1stpos" spec="beast.evolution.sitemodel.SiteModel">
+#                <parameter estimate="false" id="RealParameter47" name="shape" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <substModel id="HKY6" kappa="@kappa.t:gpr85_1stpos" spec="beast.evolution.substitutionmodel.HKY">
+#                    <frequencies frequencies="@freqParameter.t:gpr85_1stpos" id="Frequencies6" spec="beast.evolution.substitutionmodel.Frequencies"/>
+#                </substModel>
+#            </siteModel>
+#        </distribution>
+#        <distribution branchRateModel="@RelaxedClock.c:benchmark" id="treeLikelihood.tbr1b_1stpos" spec="beast.evolution.likelihood.TreeLikelihood" tree="@Tree.t:benchmark">
+#            <data data="@benchmark" filter="16444-17130" id="FilteredAlignment7" spec="beast.evolution.alignment.FilteredAlignment"/>
+#            <siteModel gammaCategoryCount="1" id="SiteModel7" mutationRate="@clockRate.t:tbr1b_1stpos" spec="beast.evolution.sitemodel.SiteModel">
+#                <parameter estimate="false" id="RealParameter48" name="shape" spec="beast.core.parameter.RealParameter">1.0</parameter>
+#                <substModel id="HKY7" kappa="@kappa.t:tbr1b_1stpos" spec="beast.evolution.substitutionmodel.HKY">
+#                    <frequencies frequencies="@freqParameter.t:tbr1b_1stpos" id="Frequencies7" spec="beast.evolution.substitutionmodel.Frequencies"/>
+#                </substModel>
+#            </siteModel>
+#        </distribution>
+#    </distribution>
+#</input>
+#
+Sample	posterior	likelihood	prior	Tree.benchmark.height	Tree.benchmark.treeLength	kappa.btbd7_1stpos	kappa.enc1_1stpos	kappa.ficd_1stpos	kappa.gpr85_1stpos	kappa.gtdc2_1stpos	kappa.kiaal_1stpos	kappa.ryr3_1stpos	kappa.tbr1b_1stpos	freqParameter.btbd7_1stpos.1	freqParameter.btbd7_1stpos.2	freqParameter.btbd7_1stpos.3	freqParameter.btbd7_1stpos.4	freqParameter.enc1_1stpos.1	freqParameter.enc1_1stpos.2	freqParameter.enc1_1stpos.3	freqParameter.enc1_1stpos.4	freqParameter.ficd_1stpos.1	freqParameter.ficd_1stpos.2	freqParameter.ficd_1stpos.3	freqParameter.ficd_1stpos.4	freqParameter.gpr85_1stpos.1	freqParameter.gpr85_1stpos.2	freqParameter.gpr85_1stpos.3	freqParameter.gpr85_1stpos.4	freqParameter.gtdc2_1stpos.1	freqParameter.gtdc2_1stpos.2	freqParameter.gtdc2_1stpos.3	freqParameter.gtdc2_1stpos.4	freqParameter.kiaal_1stpos.1	freqParameter.kiaal_1stpos.2	freqParameter.kiaal_1stpos.3	freqParameter.kiaal_1stpos.4	freqParameter.ryr3_1stpos.1	freqParameter.ryr3_1stpos.2	freqParameter.ryr3_1stpos.3	freqParameter.ryr3_1stpos.4	freqParameter.tbr1b_1stpos.1	freqParameter.tbr1b_1stpos.2	freqParameter.tbr1b_1stpos.3	freqParameter.tbr1b_1stpos.4	clockRate.btbd7_1stpos	clockRate.enc1_1stpos	clockRate.ficd_1stpos	clockRate.gpr85_1stpos	clockRate.gtdc2_1stpos	clockRate.kiaal_1stpos	clockRate.ryr3_1stpos	clockRate.tbr1b_1stpos	treeLikelihood.btbd7_1stpos	treeLikelihood.enc1_1stpos	treeLikelihood.ficd_1stpos	treeLikelihood.gpr85_1stpos	treeLikelihood.gtdc2_1stpos	treeLikelihood.kiaal_1stpos	treeLikelihood.ryr3_1stpos	treeLikelihood.tbr1b_1stpos	ucldStdev	TipRates.benchmark.taxon.Callorhinchus_milii	TipRates.benchmark.taxon.Leucoraja_erinacea	TipRates.benchmark.taxon.Notacanthus_chemnitzii	TipRates.benchmark.taxon.Halosauropsis_macrochir	TipRates.benchmark.taxon.Anguilla_rostrata	TipRates.benchmark.taxon.Nemichthys_scolopaceus	TipRates.benchmark.taxon.Muraenesox_cinereus	TipRates.benchmark.taxon.Gasterosteus_aculeatus	TipRates.benchmark.taxon.Gadus_morhua	TipRates.benchmark.taxon.Oryzias_latipes	TipRates.benchmark.taxon.Oreochromis_niloticus	TipRates.benchmark.taxon.Tetraodon_nigroviridis	TipRates.benchmark.taxon.Takifugu_rubripes	TipRates.benchmark.taxon.Engraulis_eurystole	TipRates.benchmark.taxon.Dorosoma_cepedianum	TipRates.benchmark.taxon.Danio_rerio	TipRates.benchmark.taxon.Pygocentrus_nattereri	TipRates.benchmark.taxon.Erpetoichthys_calabaricus	TipRates.benchmark.taxon.Lepisosteus_osseus	TipRates.benchmark.taxon.Latimeria_chalumnae	TipRates.benchmark.taxon.Homo_sapiens	TipRates.benchmark.taxon.Mus_musculus	TipRates.benchmark.taxon.Monodelphis_domesticus	TipRates.benchmark.taxon.Xenopus_tropicalis	TipRates.benchmark.taxon.Lepidosiren_paradoxa	TipRates.benchmark.taxon.Protopterus_aethiopicus	TipRates.benchmark.taxon.Polypterus_senegalus	TipRates.benchmark.taxon.Polyodon_spathula	TipRates.benchmark.taxon.Acipenser_fulvescens	TipRates.benchmark.taxon.Scaphirhynchus_albus	TipRates.benchmark.taxon.Lepisosteus_platostomus	TipRates.benchmark.taxon.Amia_calva	TipRates.benchmark.taxon.Elops_saurus	TipRates.benchmark.taxon.Megalops_atlanticus	TipRates.benchmark.taxon.Albula_vulpes	TipRates.benchmark.taxon.Echidna_nebulosa	TipRates.benchmark.taxon.Ophichthus_cephalozona	TipRates.benchmark.taxon.Hiodon_alosoides	TipRates.benchmark.taxon.Osteoglossum_bicirrhosum	TipRates.benchmark.taxon.Heterotis_niloticus	TipRates.benchmark.taxon.Arapaima_gigas	TipRates.benchmark.taxon.Pantodon_buchholzi	TipRates.benchmark.taxon.Xenomystus_nigri	TipRates.benchmark.taxon.Gymnarchus_niloticus	TipRates.benchmark.taxon.Gnathonemus_petersii	TipRates.benchmark.taxon.Pellona_flavipinnis	TipRates.benchmark.taxon.Chriocentrus_dorab	TipRates.benchmark.taxon.Chanos_chanos	TipRates.benchmark.taxon.Semotilus_atromaculatus	TipRates.benchmark.taxon.Notemigonus_crysoleucas	TipRates.benchmark.taxon.Apteronotus_albifrons	TipRates.benchmark.taxon.Ictalurus_punctatus	TipRates.benchmark.taxon.Oncorhynchus_mykiss_nerka	TipRates.benchmark.taxon.Esox_lucius	TipRates.benchmark.taxon.Argentina_sialis	TipRates.benchmark.taxon.Stomias_boa	TipRates.benchmark.taxon.Thaleichthys_pacificus	TipRates.benchmark.taxon.Gonorynchus_forsteri	TipRates.benchmark.taxon.Hemiodus_immaculatus_gracilis	TipRates.benchmark.taxon.Galeichthys_peruvianus	TipRates.benchmark.taxon.Gogo_arcuatus	RateStatLogger.mean	RateStatLogger.variance	RateStatLogger.coefficientOfVariation	birthRate.benchmark
+0	-126766.96918518776	-126898.47097485713	131.50178966937904	0.12016282590245833	3.807552386539831	2.0	2.0	2.0	2.0	2.0	2.0	2.0	2.0	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	0.25	1.0	1.0	1.0	1.0	1.0	1.0	1.0	1.0	-12689.584945288974	-13440.865872670727	-13285.959908964362	-23580.291652058815	-15420.974298749976	-25148.042460190052	-14026.733141522976	-9306.01869541126	0.1	1.0643932011867925	1.0624864384479011	0.8647528128638204	0.9488048385507524	0.9497896804237185	0.9646570962736271	1.0778627524105728	0.812788996186647	1.0738557314500516	1.1405617851983854	0.9286680557451412	0.8383449048147332	0.8912053843471499	1.1156836366281948	1.0048856075011983	0.9209288393215376	0.8347553382505222	0.9037607734542679	0.9437323596353931	0.9418000650932147	0.9301395795076154	1.16864903892449	0.8745028350861398	0.9708767755986767	0.9798927421782465	0.8856741955792773	0.9355550565855079	0.9825596296301267	0.9105426369413214	0.9924922433810536	0.9185925509949087	1.136869282590004	1.0354202120434652	0.8179359752735299	1.1665942255778352	0.9950584660672563	1.2360379576018559	0.9542655559543671	1.1852691388687453	1.013497854777706	0.9009701838363956	1.055610689469068	1.0749886678741365	0.8533530918879267	0.8093638780671569	0.9110307024122887	1.1293113620196862	1.080143997272589	1.104816288724067	0.8162601781790448	1.1048420949951707	0.9300536497408869	0.8295309107932447	1.0189128546467736	1.1629371682885805	1.069613998734611	0.8705936294210477	1.0401424595109432	1.0345687622614381	0.9792044694453862	1.0209481766039925	0.9932731334604361	0.009317098535927694	0.09637933619684964	1.0
+2000	-113503.87169790368	-113503.13071009867	-0.7409878050143845	0.22126533657326064	6.201713483303804	2.924578091253038	3.0086351832380913	2.464424177692779	2.4217829991517155	2.6138076434808357	2.0	3.7528449269030526	2.0	0.25	0.24848120104497073	0.2448274185729578	0.25669138038207145	0.25485828672453265	0.24122541061581992	0.24204037319850974	0.2618759294611377	0.27433035503655323	0.24663890580833556	0.2468797568100639	0.23215098234504733	0.2511113976857198	0.25	0.24888860231428023	0.25	0.25755946950549347	0.23341026342351012	0.25943750736169885	0.24959275970929762	0.25518940043158794	0.25	0.24200379411098605	0.252806805457426	0.25	0.25350125994966666	0.24439785188532126	0.2521008881650121	0.24570308958868556	0.24991435992767236	0.25438255048364206	0.25	1.0164967668906941	0.9667527572731035	1.0149734052412294	0.9759929640806968	0.9886945227354516	1.0313112608874178	1.0205538885654917	0.9852244343259157	-11422.227784107901	-12354.505428676204	-12075.438829857732	-20599.52124487035	-14211.0871045122	-21625.361680061727	-12984.480221379094	-8230.508416633455	0.54300117306298	1.184323532914195	0.9581834794154714	0.7686196128578456	0.6753206577108228	0.6582906578207665	2.8683278532548226	1.132790059341761	0.5363172148846294	1.1044759676908191	1.3465069586984315	0.6138782596817527	0.5386418277098526	0.5982998197881152	2.682350344291378	1.2957248728792363	1.1244285710061355	0.5794247128860733	0.9777366555812753	0.14653638311846823	0.8050693218811352	0.9155145096815697	1.4200765470061332	0.6932339687067909	0.9046469289913517	0.40919209958136915	0.8613643181404368	0.9908596680272431	0.9282287221258466	0.5291162726656022	0.3598569800436378	0.3258242996064269	1.3610093341384888	0.8949535563488944	0.5993929002592874	1.317773780269442	1.0570243419694934	1.521429735624855	0.8392639694526753	1.175980455135402	1.3849825997426701	1.0751848844719594	1.003263962451707	1.6258116435802716	1.6386035354143977	1.5125798935833972	1.854861642467504	1.1536440545751536	1.5085240785055112	1.002419236358218	0.622881427619677	0.7016674215755058	1.2985877718128658	0.8109969419099551	0.9566729211557092	0.5570979155281399	0.815379573297438	1.0455241568073517	1.3490455442533151	0.3876959824883247	1.342123407686558	0.5849874960239374	0.9995085590550575	0.3760153799899718	0.5642845516522947	10.079807502201051

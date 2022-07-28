@@ -35,7 +35,6 @@
 		<fileset dir="${beast2path}/lib" includes="beagle.jar"/>
 		<fileset dir="${beast2path}/lib" includes="fest.jar"/>
 		<fileset dir="${beast2path}/lib" includes="colt.jar"/>
-	<pathelement path="../ConstantDistanceOperator/build"/>
 	<pathelement path="../BEASTLabs/build"/>
 	<pathelement path="../starbeast3/build"/>
 	</path>

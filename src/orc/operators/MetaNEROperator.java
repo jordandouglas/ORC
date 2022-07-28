@@ -15,10 +15,10 @@ import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.math.distributions.LogNormalDistributionModel;
 import beast.math.distributions.ParametricDistribution;
-import consoperators.math.distributions.PiecewiseLinearDistribution;
 import beast.util.Randomizer;
-import consoperators.ConsOperatorUtils;
-import consoperators.InConstantDistanceOperator;
+import orc.consoperators.ConsOperatorUtils;
+import orc.consoperators.InConstantDistanceOperator;
+import orc.consoperators.PiecewiseLinearDistribution;
 
 
 /**
