@@ -12,6 +12,13 @@ The gap widens as the alignment becomes longer making this package very effectiv
 
 
 
+Also see BEAST 2 [blog post](https://www.beast2.org/2020/12/15/ORC.html)
+
+
+
+
+
+
 ## Installation instructions
 
 Both installation pathways assume you have BEAST 2 already installed on your machine https://www.beast2.org/
@@ -50,6 +57,11 @@ Both installation pathways assume you have BEAST 2 already installed on your mac
 
 ### By hand
 
+
+The main branch of this repository is for BEAST 2.7. 
+
+
+The instructions below apply to BEAST 2.6 (so make sure to switch over to the v2.6 branch of ORC). Instructions for BEAST 2.7 will be released at a later date.
 
 
 To install this package manually, first clone this repository and all of its dependencies from GitHub, including BEAST 2
@@ -105,6 +117,9 @@ Run matlab/GenerateOperators.m using MATLAB to generate all 47 solvable operator
 For xml files used during benchmarking, please see
 
 https://github.com/jordandouglas/ClockModelPaper
+
+Please note that these xml files are dependent on the 'FastRelaxedClockLogNormal' package, which can be installed using beauti
+
 
 
 ## Citation
