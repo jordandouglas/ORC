@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='Standard' beautistatus='' namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihoodbeast.base.evolution.alignment:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.tree.coalescent:beast.pkgmgmt:beast.base.core:beast.base.inference.util:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood" required="" version="2.7">
 
-
-	<!-- 
-	Single locus caterpillar genomic data by 
-	Kawahara, A. Y., and D. Rubinoff. "Convergent evolution of morphology and habitat use in the explosive H awaiian fancy case caterpillar radiation." Journal of Evolutionary Biology 26, no. 8 (2013): 1763-1773.
-	-->
-
     <data
 id="alignment"
 spec="beast.base.evolution.alignment.Alignment">
@@ -124,17 +118,6 @@ spec="beast.base.evolution.alignment.Alignment">
         <distribution id="posterior" spec="CompoundDistribution">
             <distribution id="prior" spec="CompoundDistribution">
                 <distribution id="YuleModel.t:CAD_1stpos" spec="beast.base.evolution.speciation.YuleModel" birthDiffRate="@birthRate.t:CAD_1stpos" tree="@Tree.t:CAD_1stpos"/>
-                <prior id="ORCRatePriorDistribution.c:CAD_1stpos" name="distribution" x="@ORCRates.c:CAD_1stpos">
-                    <LogNormal id="LogNormalDistributionModel.3" S="@ORCsigma.c:CAD_1stpos" meanInRealSpace="true" name="distr">
-                        <parameter id="RealParameter.22" spec="parameter.RealParameter" estimate="false" name="M">1.0</parameter>
-                    </LogNormal>
-                </prior>
-                <prior id="ORCsigmaPrior.c:CAD_1stpos" name="distribution" x="@ORCsigma.c:CAD_1stpos">
-                    <Gamma id="Gamma.6" name="distr">
-                        <parameter id="RealParameter.23" spec="parameter.RealParameter" estimate="false" name="alpha">0.5396</parameter>
-                        <parameter id="RealParameter.24" spec="parameter.RealParameter" estimate="false" name="beta">0.3819</parameter>
-                    </Gamma>
-                </prior>
                 <prior id="YuleBirthRatePrior.t:CAD_1stpos" name="distribution" x="@birthRate.t:CAD_1stpos">
                     <Uniform id="Uniform.1" name="distr" upper="Infinity"/>
                 </prior>
@@ -157,6 +140,17 @@ spec="beast.base.evolution.alignment.Alignment">
                         <taxon id="outmdn53" spec="beast.base.evolution.alignment.Taxon"/>
                     </taxonset>
                 </distribution>
+                <prior id="ORCsigmaPrior.c:CAD_1stpos" name="distribution" x="@ORCsigma.c:CAD_1stpos">
+                    <Gamma id="Gamma.6" name="distr">
+                        <parameter id="RealParameter.23" spec="parameter.RealParameter" estimate="false" name="alpha">0.5396</parameter>
+                        <parameter id="RealParameter.24" spec="parameter.RealParameter" estimate="false" name="beta">0.3819</parameter>
+                    </Gamma>
+                </prior>
+                <prior id="ORCRatePriorDistribution.c:CAD_1stpos" name="distribution" x="@ORCRates.c:CAD_1stpos">
+                    <LogNormal id="LogNormalDistributionModel.3" S="@ORCsigma.c:CAD_1stpos" meanInRealSpace="true" name="distr">
+                        <parameter id="RealParameter.22" spec="parameter.RealParameter" estimate="false" name="M">1.0</parameter>
+                    </LogNormal>
+                </prior>
             </distribution>
             <distribution id="likelihood" spec="CompoundDistribution" useThreads="true">
                 <distribution id="treeLikelihood.CAD_1stpos" spec="ThreadedTreeLikelihood" data="@CAD_1stpos" tree="@Tree.t:CAD_1stpos">
@@ -224,6 +218,12 @@ spec="beast.base.evolution.alignment.Alignment">
                 <kernelDistribution id="KernelDistribution$Bactrian.43" spec="operator.kernel.KernelDistribution$Bactrian"/>
             </operator>
             <operator id="ORCSampleFromPriorOperator.rates.c:CAD_1stpos" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCRates.c:CAD_1stpos" prior2="@ORCRatePriorDistribution.c:CAD_1stpos" weight="1.0"/>
+        </operator>
+        <operator id="ORCAdaptableOperatorSampler_NER.c:CAD_1stpos" spec="AdaptableOperatorSampler" weight="15.0">
+            <tree idref="Tree.t:CAD_1stpos"/>
+            <operator id="ORCNER_null.c:CAD_1stpos" spec="Exchange" tree="@Tree.t:CAD_1stpos" weight="0.0"/>
+            <operator id="ORCNER_dAE_dBE_dCE.c:CAD_1stpos" spec="orc.ner.NEROperator_dAE_dBE_dCE" rates="@ORCRates.c:CAD_1stpos" tree="@Tree.t:CAD_1stpos" weight="1.0"/>
+            <metric id="RNNIMetric.0" spec="beastlabs.evolution.tree.RNNIMetric" taxonset="@TaxonSet.CAD_1stpos"/>
         </operator>
         <operator id="FrequenciesExchanger.s:CAD_1stpos" spec="operator.kernel.BactrianDeltaExchangeOperator" delta="0.01" weight="0.1">
             <parameter idref="freqParameter.s:CAD_1stpos"/>

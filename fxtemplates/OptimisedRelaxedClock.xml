@@ -95,9 +95,11 @@
 				</operator>
 
 
-				<operator id="ORCNER_null.c:$(n)" spec="Exchange" tree="@Tree.t:$(n)" weight="5"/>
-				<operator id="ORCNER_dAE_dBE_dCE.c:$(n)" spec="orc.ner.NEROperator_dAE_dBE_dCE" tree="@Tree.t:$(n)" rates="@ORCRates.c:$(n)" weight="5"/>
-
+				<operator id="ORCAdaptableOperatorSampler_NER.c:$(n)" spec="beast.base.evolution.operator.AdaptableOperatorSampler" tree="@Tree.t:$(n)" weight="15">
+					<metric spec="beastlabs.evolution.tree.RNNIMetric" taxonset="@TaxonSet.$(n)"/>
+					<operator id="ORCNER_null.c:$(n)" spec="Exchange" tree="@Tree.t:$(n)" weight="1"/>
+					<operator id="ORCNER_dAE_dBE_dCE.c:$(n)" spec="orc.ner.NEROperator_dAE_dBE_dCE" tree="@Tree.t:$(n)" rates="@ORCRates.c:$(n)" weight="1"/>
+				</operator>
 
 
 				<log id="ORCRatesStat.c:$(n)" spec="beast.base.evolution.RateStatistic" branchratemodel="@OptimisedRelaxedClock.c:$(n)" tree="@Tree.t:$(n)"/>
@@ -106,13 +108,6 @@
 
 
 
-				<!-- Temporarily commenting out until tree metric issue is resolved
-				<operator id="ORCAdaptableOperatorSampler_NER.c:$(n)" spec="beast.base.evolution.operator.AdaptableOperatorSampler" tree="@Tree.t:$(n)" weight="15">
-					<metric spec="beastlabs.evolution.tree.RNNIMetric" taxonset="@TaxonSet.$(n)"/>
-					<operator id="ORCNER_null.c:$(n)" spec="Exchange" tree="@Tree.t:$(n)" weight="1"/>
-					<operator id="ORCNER_dAE_dBE_dCE.c:$(n)" spec="orc.ner.NEROperator_dAE_dBE_dCE" tree="@Tree.t:$(n)" rates="@ORCRates.c:$(n)" weight="1"/>
-				</operator>
-				-->
 
             <connect srcID='ORCucldMean.c:$(n)' targetID='state' inputName='stateNode'
                      if='inlikelihood(ORCucldMean.c:$(n)) and ORCucldMean.c:$(n)/estimate=true'/>
@@ -129,35 +124,22 @@
 
 
 
-			<connect srcID='ORCAdaptableOperatorSampler_sigma.c:$(n)' targetID='mcmc' inputName='operator'
+		<connect srcID='ORCAdaptableOperatorSampler_sigma.c:$(n)' targetID='mcmc' inputName='operator'
                      if='inlikelihood(ORCsigma.c:$(n)) and ORCsigma.c:$(n)/estimate=true'> Adaptive weight operator for the relaxed clock standard deviation of partition c:$(n)
-            </connect>
-			<connect srcID='ORCAdaptableOperatorSampler_rates_root.c:$(n)' targetID='mcmc' inputName='operator'
+            	</connect>
+		<connect srcID='ORCAdaptableOperatorSampler_rates_root.c:$(n)' targetID='mcmc' inputName='operator'
                     if='inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the root node and incident branch rates of partition c:$(n)
-            </connect>
-			<connect srcID='ORCAdaptableOperatorSampler_rates_internal.c:$(n)' targetID='mcmc' inputName='operator'
+            	</connect>
+		<connect srcID='ORCAdaptableOperatorSampler_rates_internal.c:$(n)' targetID='mcmc' inputName='operator'
                      if='inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the internal nodes and branch rates of partition c:$(n)
-            </connect>
+            	</connect>
+		<connect srcID='ORCAdaptableOperatorSampler_NER.c:$(n)' targetID='mcmc' inputName='operator'
+	     if='inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true and inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the tree of partition c:$(n) (Narrow Exchange Rates)
+		</connect>
+	
 
-
-
-			<connect srcID='ORCNER_null.c:$(n)' targetID='mcmc' inputName='operator'
-                     if='inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true and inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the tree of partition c:$(n) (Narrow Exchange)
-            </connect>
-
-            <connect srcID='ORCNER_dAE_dBE_dCE.c:$(n)' targetID='mcmc' inputName='operator'
-                     if='inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true and inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the tree of partition c:$(n) (Narrow Exchange Rates)
-            </connect>
-
-
-				<!--
-			<connect srcID='ORCAdaptableOperatorSampler_NER.c:$(n)' targetID='mcmc' inputName='operator'
-                     if='inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true and inlikelihood(ORCRates.c:$(n)) and ORCRates.c:$(n)/estimate=true'> Adaptive weight operator for the tree of partition c:$(n) (Narrow Exchange Rates)
-            </connect>
-			-->
-
-			<!-- Destroy the standard narrow exchange operator -->
-			<connect method="orc.operators.MetaNEROperator.customConnector"/>
+		<!-- Destroy the standard narrow exchange operator -->
+		<connect method="orc.operators.MetaNEROperator.customConnector"/>
 
 
             <connect srcID='Tree.t:$(n)' targetID='OptimisedRelaxedClock.c:$(n)' inputName='tree' if='inlikelihood(OptimisedRelaxedClock.c:$(n))'/>

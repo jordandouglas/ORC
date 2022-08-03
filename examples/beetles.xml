@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='Standard' beautistatus='' namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihoodbeast.base.evolution.alignment:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.tree.coalescent:beast.pkgmgmt:beast.base.core:beast.base.inference.util:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood" required="" version="2.7">
 
-
-
-
-	<!-- 
-	5 locus bark beetle genomic data by 
-	Cognato, Anthony I., and Alfried P. Vogler. "Exploring data interaction and nucleotide alignment in a multiple gene analysis of Ips (Coleoptera: Scolytinae)." Systematic Biology 50, no. 6 (2001): 758-780.
-	-->
-
-
     <data
 id="alignment"
 spec="beast.base.evolution.alignment.Alignment">
@@ -100,17 +91,6 @@ spec="beast.base.evolution.alignment.Alignment">
         <distribution id="posterior" spec="CompoundDistribution">
             <distribution id="prior" spec="CompoundDistribution">
                 <distribution id="YuleModel.t:ef1a_1stpos" spec="beast.base.evolution.speciation.YuleModel" birthDiffRate="@birthRate.t:ef1a_1stpos" tree="@Tree.t:ef1a_1stpos"/>
-                <prior id="ORCRatePriorDistribution.c:ef1a_1stpos" name="distribution" x="@ORCRates.c:ef1a_1stpos">
-                    <LogNormal id="LogNormalDistributionModel.0" S="@ORCsigma.c:ef1a_1stpos" meanInRealSpace="true" name="distr">
-                        <parameter id="RealParameter.10" spec="parameter.RealParameter" estimate="false" name="M">1.0</parameter>
-                    </LogNormal>
-                </prior>
-                <prior id="ORCsigmaPrior.c:ef1a_1stpos" name="distribution" x="@ORCsigma.c:ef1a_1stpos">
-                    <Gamma id="Gamma.0" name="distr">
-                        <parameter id="RealParameter.11" spec="parameter.RealParameter" estimate="false" name="alpha">5.0</parameter>
-                        <parameter id="RealParameter.12" spec="parameter.RealParameter" estimate="false" name="beta">0.05</parameter>
-                    </Gamma>
-                </prior>
                 <prior id="YuleBirthRatePrior.t:ef1a_1stpos" name="distribution" x="@birthRate.t:ef1a_1stpos">
                     <Uniform id="Uniform.1" name="distr" upper="Infinity"/>
                 </prior>
@@ -126,6 +106,17 @@ spec="beast.base.evolution.alignment.Alignment">
                         <taxon id="Pk1" spec="beast.base.evolution.alignment.Taxon"/>
                     </taxonset>
                 </distribution>
+                <prior id="ORCsigmaPrior.c:ef1a_1stpos" name="distribution" x="@ORCsigma.c:ef1a_1stpos">
+                    <Gamma id="Gamma.0" name="distr">
+                        <parameter id="RealParameter.11" spec="parameter.RealParameter" estimate="false" name="alpha">5.0</parameter>
+                        <parameter id="RealParameter.12" spec="parameter.RealParameter" estimate="false" name="beta">0.05</parameter>
+                    </Gamma>
+                </prior>
+                <prior id="ORCRatePriorDistribution.c:ef1a_1stpos" name="distribution" x="@ORCRates.c:ef1a_1stpos">
+                    <LogNormal id="LogNormalDistributionModel.0" S="@ORCsigma.c:ef1a_1stpos" meanInRealSpace="true" name="distr">
+                        <parameter id="RealParameter.10" spec="parameter.RealParameter" estimate="false" name="M">1.0</parameter>
+                    </LogNormal>
+                </prior>
             </distribution>
             <distribution id="likelihood" spec="CompoundDistribution" useThreads="true">
                 <distribution id="treeLikelihood.ef1a_1stpos" spec="ThreadedTreeLikelihood" data="@ef1a_1stpos" tree="@Tree.t:ef1a_1stpos">
@@ -237,6 +228,12 @@ filter="1-649"/>
                 <kernelDistribution id="KernelDistribution$Bactrian.115" spec="operator.kernel.KernelDistribution$Bactrian"/>
             </operator>
             <operator id="ORCSampleFromPriorOperator.rates.c:ef1a_1stpos" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCRates.c:ef1a_1stpos" prior2="@ORCRatePriorDistribution.c:ef1a_1stpos" weight="1.0"/>
+        </operator>
+        <operator id="ORCAdaptableOperatorSampler_NER.c:ef1a_1stpos" spec="AdaptableOperatorSampler" weight="15.0">
+            <tree idref="Tree.t:ef1a_1stpos"/>
+            <operator id="ORCNER_null.c:ef1a_1stpos" spec="Exchange" tree="@Tree.t:ef1a_1stpos" weight="0.0"/>
+            <operator id="ORCNER_dAE_dBE_dCE.c:ef1a_1stpos" spec="orc.ner.NEROperator_dAE_dBE_dCE" rates="@ORCRates.c:ef1a_1stpos" tree="@Tree.t:ef1a_1stpos" weight="1.0"/>
+            <metric id="RNNIMetric.0" spec="beastlabs.evolution.tree.RNNIMetric" taxonset="@TaxonSet.ef1a_1stpos"/>
         </operator>
         <logger id="tracelog" spec="Logger" fileName="$(filebase).log" logEvery="1000" model="@posterior" sanitiseHeaders="true" sort="smart">
             <log idref="posterior"/>
