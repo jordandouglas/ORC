@@ -14,7 +14,9 @@
                      beast.base.evolution.branchratemodel.UCRelaxedClockModel.rates,
                      beast.base.evolution.branchratemodel.UCRelaxedClockModel.normalize,
                      beast.base.evolution.branchratemodel.UCRelaxedClockModel.distr,
-                     beast.base.evolution.branchratemodel.UCRelaxedClockModel.rateQuantiles'>
+                     beast.base.evolution.branchratemodel.UCRelaxedClockModel.rateQuantiles'
+            hmc='OptimisedRelaxedClock/clock.rate/=StrictClock/clock.rate,
+                 ORCucldMean/index/=Priors/ClockPrior/'>
             <![CDATA[
 
 				<branchRateModel id="OptimisedRelaxedClock.c:$(n)" spec="beast.base.evolution.branchratemodel.UCRelaxedClockModel" rates="@ORCRates.c:$(n)" tree="@Tree.t:$(n)">
@@ -51,7 +53,12 @@
 
 
 
-				<operator id="ORCucldMeanScaler.c:$(n)" spec="ScaleOperator" parameter="@ORCucldMean.c:$(n)" scaleFactor="0.5" weight="5.0"/>
+				<operator id="ORCucldMeanScaler.c:$(n)" spec="ScaleOperator" parameter="@ORCucldMean.c:$(n)" scaleFactor="0.5" weight="3.0"/>
+				<operator id="ORC.UpDown.c:$(n)" spec="beast.base.inference.operator.kernel.BactrianUpDownOperator" scaleFactor="0.75" weight="3.0">
+				 	<up idref="ORCucldMean.c:$(n)"/>               
+		            <down idref="Tree.t:$(n)"/>
+	       		</operator>
+		
 
 
 
@@ -119,6 +126,11 @@
             <connect srcID='ORCucldMeanScaler.c:$(n)' targetID='mcmc' inputName='operator'
                      if='inlikelihood(ORCucldMean.c:$(n)) and ORCucldMean.c:$(n)/estimate=true'>Scale clock rate of partition c:$(n)
             </connect>
+            <connect srcID='ORC.UpDown.c:$(n)' targetID='mcmc' inputName='operator'
+                     if='inlikelihood(Tree.t:$(n)) and inlikelihood(ORCucldMean.c:$(n)) and ORCucldMean.c:$(n)/estimate=true and Tree.t:$(n)/estimate=true'>Updown operator for clock rate and tree of partition c:$(n)
+            </connect>
+
+
 
 
 
