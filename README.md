@@ -45,9 +45,7 @@ Both installation pathways assume you have BEAST 2 already installed on your mac
 
 
 
-6. To confirm this has worked, display the Operators tab as shown below
-
-![](figs/fig4.png)
+6. To confirm this has worked, display the Operators tab by pressing `View => Show operators panel`
 
 7. You should see the following 4 adaptive operators in the Operators tab:
 
@@ -56,58 +54,6 @@ Both installation pathways assume you have BEAST 2 already installed on your mac
 8. File -> Save As and run the .xml file using BEAST 2 as per usual
 
 
-
-### By hand
-
-
-The main branch of this repository is for BEAST 2.7. 
-
-
-The instructions below apply to BEAST 2.6 (so make sure to switch over to the v2.6 branch of ORC). Instructions for BEAST 2.7 will be released at a later date.
-
-
-To install this package manually, first clone this repository and all of its dependencies from GitHub, including BEAST 2
-
-```
-mkdir beast2
-cd beast2
-git clone https://github.com/CompEvol/BEAST2
-git clone https://github.com/BEAST2-Dev/BEASTLabs
-git clone https://github.com/Rong419/ConstantDistanceOperator
-git clone https://github.com/jordandouglas/ORC
-```
-
-Then navigate to into each directory and install them using ant
-
-```
-cd BEAST2
-ant linux
-
-cd ../BEASTLabs
-ant addon
-
-cd ../ConstantDistanceOperator
-ant addon
-
-cd ../ORC
-ant addon
-
-cd ../
-```
-
-Finally, extract the contents of these addons:
-
-```
-unzip -o BEASTLabs/build/dist/BEASTlabs.addon.v*zip -d ~/.beast/2.6/BEASTLabs/.
-unzip -o ConstantDistanceOperator/build/dist/FastRelaxedClockLogNormal.addon.v*zip -d ~/.beast/2.6/FastRelaxedClockLogNormal/.
-unzip -o ORC/build/dist/ORC.addon.v*zip -d ~/.beast/2.6/ORC/.
-```
-
-
-This assumes that BEAST 2 is installed in the ~/.BEAST 2/ directory.
-
-If you are not using BEAST 2.6 then replace 2.6 with the appropriate version number.
-For more details see https://beast2.blogs.auckland.ac.nz/managing-packages/#Install_by_hand .
 
 
 ## Automated generation of Narrow Exchange Rate operators
@@ -128,5 +74,4 @@ Please note that these xml files are dependent on the 'FastRelaxedClockLogNormal
 
 Jordan Douglas, Rong Zhang,Remco Bouckaert. 
 Adaptive dating and fast proposals: Revisiting the phylogenetic relaxed clock model. PLoS computational biology. 2021 Feb 2;17(2):e1008322.
-<a href="https://doi.org/10.1371/journal.pcbi.1008322">paper</a>
-<a href="https://www.biorxiv.org/content/10.1101/2020.09.09.289124v1.abstract">preprint</a>
+<a href="https://doi.org/10.1371/journal.pcbi.1008322">link</a>
