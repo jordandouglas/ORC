@@ -23,11 +23,6 @@ The main branch of this repository is for BEAST 2.7. To see example sessions and
 
 ## Installation instructions
 
-Both installation pathways assume you have BEAST 2 already installed on your machine https://www.beast2.org/
-
-
-### BEAUti
-
 
 1. Launch BEAUti
 2. Click on File -> Manage Packages
