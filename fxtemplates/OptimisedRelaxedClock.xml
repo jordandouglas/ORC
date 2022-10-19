@@ -28,7 +28,8 @@
 
 
 				<parameter id="ORCsigma.c:$(n)" name="stateNode" lower="0.0">0.2</parameter>
-				<parameter id="ORCRates.c:$(n)" name="stateNode" lower="0.0">0.5</parameter>
+				<!-- lower bound slightly above zero to prevent numerical issues with UcldScalerOperator -->
+				<parameter id="ORCRates.c:$(n)" name="stateNode" lower="1e-100">0.5</parameter>
 
 
 				<prior id="ORCRatePriorDistribution.c:$(n)" name="distribution" x="@ORCRates.c:$(n)">
