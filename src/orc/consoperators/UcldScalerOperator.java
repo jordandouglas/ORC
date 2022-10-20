@@ -80,29 +80,35 @@ public class UcldScalerOperator extends Operator {
             LN = (LogNormalDistributionModel) distribution;
         }
 
-        // Step1: calculate rates/quantiles for real rates given the current ucldStdev
-        if (this.usingRates) {
-        	
-        	// Rates -> quantiles
-	        for (int idx = 0; idx < this.nrates; idx++) {
-	            double r = rates.getValue(idx);
-	            real_rates[idx] = r;
-	            double q = getRateQuantiles(r);
-	            quantiles[idx] = q;
-	
+        try {
+        
+	        // Step1: calculate rates/quantiles for real rates given the current ucldStdev
+	        if (this.usingRates) {
+	        	
+	        	// Rates -> quantiles
+		        for (int idx = 0; idx < this.nrates; idx++) {
+		            double r = rates.getValue(idx);
+		            real_rates[idx] = r;
+		            double q = getRateQuantiles(r);
+		            quantiles[idx] = q;
+		
+		        }
+		        
+	        }else {
+	        	
+	        	// Quantiles -> rates
+	        	for (int idx = 0; idx < this.nrates; idx++) {
+		            double q = this.quantilesParam.getValue(idx);
+		            quantiles[idx] = q;
+		            double r = getRealRate(q);
+		            real_rates[idx] = r;
+		
+		        }
+	        	
 	        }
 	        
-        }else {
-        	
-        	// Quantiles -> rates
-        	for (int idx = 0; idx < this.nrates; idx++) {
-	            double q = this.quantilesParam.getValue(idx);
-	            quantiles[idx] = q;
-	            double r = getRealRate(q);
-	            real_rates[idx] = r;
-	
-	        }
-        	
+        }catch(Exception e) {
+        	return Double.NEGATIVE_INFINITY; 
         }
 
         // Step2: use scale operation to propose a new_ucldStdev
@@ -122,14 +128,10 @@ public class UcldScalerOperator extends Operator {
         new_stdev = stdev * scale;
         if (new_stdev <= 0) return Double.NEGATIVE_INFINITY;
 
-        // set the new value
-        ucldStdev.setValue(new_stdev);
+      
 
         // return the log hastings ratio for scale operation
        
-
-        
-        
 
         // use mean (M=1) and variance (stdev square) to calculate miu and sigma square of lognormal in log space
         double variance = FastMath.exp(stdev * stdev) -1;
@@ -139,53 +141,64 @@ public class UcldScalerOperator extends Operator {
 
         // Step3: calculate the new rates or quantiles under the proposed new_ucldStdev
         
-        // Rates
-        if (this.usingRates) {
-	       for (int idx = 0; idx < this.nrates; idx++) {
-	            double r_ = getRealRate(quantiles[idx]);
-	
-	            // to avoid numerical issues
-	            if (r_== 0.0 || r_ == Double.POSITIVE_INFINITY) {
-	                return Double.NEGATIVE_INFINITY;
-	            }
-	
-	            // partial derivative of icdf_s'(cdf_s(r)) / r
-	            hastingsRatio = hastingsRatio + getDicdf(real_rates[idx],quantiles[idx],miu,new_miu,stdev,new_stdev);
-	
-	            rates.setValue(idx, r_);
-	        }
-	       
-	    // Quantiles
-        }else {
-        	
-        	// Step3: calculate the new quantiles such that the rates remain constant
-    	
-        	for (int idx = 0; idx < this.nrates; idx++) {
-        		 
-        		// Original quantile
-        		double q = this.quantilesParam.getArrayValue(idx);
-        		
-        		// Original rate (want the new rate to be the same)
-				double r = real_rates[idx];
-				
-				// Propose q_ such that the rate is constant
-				double q_ = this.getRateQuantiles(r);
-        		if (q_ <= 0 || q_ >= 1) return Double.NEGATIVE_INFINITY;
-        		quantilesParam.setValue(idx, q_);
-        		
-        		
-        		// logHR
-        		double logHRBranch = this.getQuantHR(q, miu, new_miu, stdev, new_stdev);
-        		
-        		
-        		//System.out.println(stdev + " -> " + new_stdev + "; " + q + " -> " + q_ + "; HR: " + logHRBranch);
-        		hastingsRatio += logHRBranch;
-        		 
-        	}
+        
+        try {
+	        
+	        // Rates
+	        if (this.usingRates) {
+		       for (int idx = 0; idx < this.nrates; idx++) {
+		            double r_ = getRealRate(quantiles[idx]);
+		
+		            // to avoid numerical issues
+		            if (r_== 0.0 || r_ == Double.POSITIVE_INFINITY) {
+		                return Double.NEGATIVE_INFINITY;
+		            }
+		
+		            // partial derivative of icdf_s'(cdf_s(r)) / r
+		            hastingsRatio = hastingsRatio + getDicdf(real_rates[idx],quantiles[idx],miu,new_miu,stdev,new_stdev);
+		
+		            rates.setValue(idx, r_);
+		        }
+		       
+		    // Quantiles
+	        }else {
 	        	
-
-        	
+	        	// Step3: calculate the new quantiles such that the rates remain constant
+	    	
+	        	for (int idx = 0; idx < this.nrates; idx++) {
+	        		 
+	        		// Original quantile
+	        		double q = this.quantilesParam.getArrayValue(idx);
+	        		
+	        		// Original rate (want the new rate to be the same)
+					double r = real_rates[idx];
+					
+					// Propose q_ such that the rate is constant
+					double q_ = this.getRateQuantiles(r);
+	        		if (q_ <= 0 || q_ >= 1) return Double.NEGATIVE_INFINITY;
+	        		quantilesParam.setValue(idx, q_);
+	        		
+	        		
+	        		// logHR
+	        		double logHRBranch = this.getQuantHR(q, miu, new_miu, stdev, new_stdev);
+	        		
+	        		
+	        		//System.out.println(stdev + " -> " + new_stdev + "; " + q + " -> " + q_ + "; HR: " + logHRBranch);
+	        		hastingsRatio += logHRBranch;
+	        		 
+	        	}
+		        	
+	
+	        	
+	        }
+	        
+        }catch(Exception e) {
+        	return Double.NEGATIVE_INFINITY;
         }
+        
+        
+        // set the new value
+        ucldStdev.setValue(new_stdev);
         
         //System.out.println("HR " + hastingsRatio);
 
