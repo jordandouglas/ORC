@@ -20,6 +20,15 @@ The main branch of this repository is for BEAST 2.7. To see example sessions and
 
 
 
+## Constant distance operator
+
+ORC uses the constant distance operator to move the internal node of a tree, along with the three incident branch rates, as depicted below. The y-axis shows node height, and nodes are coloured by branch rate under the relaxed clock model. Darker branches have faster rates.
+
+![](figs/CD.gif)
+
+This operator was introduced by Zhang and Drummond 2020.
+
+
 
 ## Installation instructions
 
