@@ -103,6 +103,8 @@
 				</operator>
 
 
+				<taxonset spec="beast.base.evolution.alignment.TaxonSet" id="TaxonSet.$(n)" alignment="@$(n)"/>
+
 				<operator id="ORCAdaptableOperatorSampler_NER.c:$(n)" spec="beast.base.evolution.operator.AdaptableOperatorSampler" tree="@Tree.t:$(n)" weight="15">
 					<metric spec="beastlabs.evolution.tree.RNNIMetric" taxonset="@TaxonSet.$(n)"/>
 					<operator id="ORCNER_null.c:$(n)" spec="Exchange" tree="@Tree.t:$(n)" weight="1"/>
