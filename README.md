@@ -74,6 +74,13 @@ Please note that these xml files are dependent on the 'FastRelaxedClockLogNormal
 
 
 
+## Fixing the tree topology
+
+To fix the starting tree, please refer to the [Fix starting tree](https://www.beast2.org/fix-starting-tree/) blog post. 
+
+If the optimised relaxed clock is also being used, then this operator also needs to be switched off: `id="ORCAdaptableOperatorSampler_NER.c..."`. This operator performs a narrow exchange topology operation, while also accounting for branch rates.
+
+
 ## Citation
 
 Jordan Douglas, Rong Zhang,Remco Bouckaert. 
