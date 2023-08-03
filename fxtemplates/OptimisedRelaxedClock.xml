@@ -105,7 +105,7 @@
 
 				<taxonset spec="beast.base.evolution.alignment.TaxonSet" id="TaxonSet.$(n)" alignment="@$(n)"/>
 
-				<operator id="ORCAdaptableOperatorSampler_NER.c:$(n)" spec="beast.base.evolution.operator.AdaptableOperatorSampler" tree="@Tree.t:$(n)" weight="15">
+				<operator id="ORCAdaptableOperatorSampler_NER.c:$(n)" spec="beast.base.evolution.operator.AdaptableOperatorSampler" tree="@Tree.t:$(n)" weight="10">
 					<metric spec="beastlabs.evolution.tree.RNNIMetric" taxonset="@TaxonSet.$(n)"/>
 					<operator id="ORCNER_null.c:$(n)" spec="Exchange" tree="@Tree.t:$(n)" weight="1"/>
 					<operator id="ORCNER_dAE_dBE_dCE.c:$(n)" spec="orc.ner.NEROperator_dAE_dBE_dCE" tree="@Tree.t:$(n)" rates="@ORCRates.c:$(n)" weight="1"/>
@@ -153,8 +153,9 @@
 		</connect>
 	
 
-		<!-- Destroy the standard narrow exchange operator -->
+		<!-- Destroy the standard narrow exchange operator 
 		<connect method="orc.operators.MetaNEROperator.customConnector"/>
+		-->
 
 
             <connect srcID='Tree.t:$(n)' targetID='OptimisedRelaxedClock.c:$(n)' inputName='tree' if='inlikelihood(OptimisedRelaxedClock.c:$(n))'/>
