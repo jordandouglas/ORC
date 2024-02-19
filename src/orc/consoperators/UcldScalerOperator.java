@@ -7,6 +7,7 @@ import org.apache.commons.math3.util.FastMath;
 
 import beast.base.core.Description;
 import beast.base.core.Input;
+import beast.base.core.Log;
 import beast.base.inference.Operator;
 import beast.base.inference.StateNode;
 import beast.base.inference.distribution.LogNormalDistributionModel;
@@ -23,7 +24,8 @@ import java.util.List;
 @Description("For standard deviation of the lognormal distribution of branch rates in uncorrelated relaxed clock model: " +
               "a scale operation on ucldstdev and proposing rates that maintain the same probability.")
 public class UcldScalerOperator extends Operator {
-	
+
+
 	final public Input<RealParameter> rateInput = new Input<>("rates", "the rates associated with nodes in the tree for sampling of individual rates among branches.",Input.Validate.REQUIRED);
 	final public Input<RealParameter> quantileInput = new Input<>("quantiles", "the quantiles of each branch rate.", Input.Validate.XOR,rateInput);
 	final public Input<RealParameter> stdevInput = new Input<>("stdev", "the distribution governing the rates among branches.");
@@ -31,7 +33,6 @@ public class UcldScalerOperator extends Operator {
 	final public Input<ParametricDistribution> rateDistInput = new Input<>("distr", "the distribution governing the rates among branches.", Input.Validate.REQUIRED);
 	final public Input<KernelDistribution> proposalKernelInput = new Input<>("kernel", "Proposal kernel for a scale on the clock SD.");
 	 
-	
 	
 	// Proposal kernel
     private KernelDistribution kernel;
@@ -66,6 +67,7 @@ public class UcldScalerOperator extends Operator {
 	    
 	}
 	
+
     @Override
     public double proposal() {
         double hastingsRatio;
@@ -128,7 +130,7 @@ public class UcldScalerOperator extends Operator {
         new_stdev = stdev * scale;
         if (new_stdev <= 0) return Double.NEGATIVE_INFINITY;
 
-      
+        //Log.warning("part 1 " + stdev + " -> " + new_stdev);
 
         // return the log hastings ratio for scale operation
        
@@ -140,20 +142,29 @@ public class UcldScalerOperator extends Operator {
         double new_miu = - 0.5 * FastMath.log(1 + new_variance); // new miu of lognormal
 
         // Step3: calculate the new rates or quantiles under the proposed new_ucldStdev
-        
-        
         try {
 	        
 	        // Rates
 	        if (this.usingRates) {
+	        	
+	           // First, validate the proposed rates
 		       for (int idx = 0; idx < this.nrates; idx++) {
 		            double r_ = getRealRate(quantiles[idx]);
 		
 		            // to avoid numerical issues
-		            if (r_== 0.0 || r_ == Double.POSITIVE_INFINITY) {
+		            if (r_ <= Math.max(rates.getLower(), 0) || r_ >= Math.min(rates.getUpper(), Double.POSITIVE_INFINITY)) {
+		            	//Log.warning("Ucld fail 1");
 		                return Double.NEGATIVE_INFINITY;
 		            }
-		
+		        }
+		       
+		       
+	    	   ucldStdev.setValue(new_stdev);
+		       
+		       // Second, update the parameters 
+		       for (int idx = 0; idx < this.nrates; idx++) {
+		            double r_ = getRealRate(quantiles[idx]);
+
 		            // partial derivative of icdf_s'(cdf_s(r)) / r
 		            hastingsRatio = hastingsRatio + getDicdf(real_rates[idx],quantiles[idx],miu,new_miu,stdev,new_stdev);
 		
@@ -163,8 +174,25 @@ public class UcldScalerOperator extends Operator {
 		    // Quantiles
 	        }else {
 	        	
-	        	// Step3: calculate the new quantiles such that the rates remain constant
 	    	
+	        	// First, validate the proposed qualtiles
+	        	for (int idx = 0; idx < this.nrates; idx++) {
+	        		 
+	        		// Original rate (want the new rate to be the same)
+					double r = real_rates[idx];
+					
+					// Propose q_ such that the rate is constant
+					double q_ = this.getRateQuantiles(r);
+	        		if (q_ <= 0 || q_ >= 1) {
+	        			//Log.warning("Ucld fail 2");
+	        			return Double.NEGATIVE_INFINITY;
+	        		}
+
+	        	}
+	        	
+		    	ucldStdev.setValue(new_stdev);
+	        	
+	        	// Second, update the parameters 
 	        	for (int idx = 0; idx < this.nrates; idx++) {
 	        		 
 	        		// Original quantile
@@ -175,7 +203,6 @@ public class UcldScalerOperator extends Operator {
 					
 					// Propose q_ such that the rate is constant
 					double q_ = this.getRateQuantiles(r);
-	        		if (q_ <= 0 || q_ >= 1) return Double.NEGATIVE_INFINITY;
 	        		quantilesParam.setValue(idx, q_);
 	        		
 	        		
@@ -192,19 +219,23 @@ public class UcldScalerOperator extends Operator {
 	        	
 	        }
 	        
-        }catch(Exception e) {
+        }catch(Throwable e) {
+        	//Log.warning("Ucld fail 3");
         	return Double.NEGATIVE_INFINITY;
         }
         
         
-        // set the new value
-        ucldStdev.setValue(new_stdev);
         
-        //System.out.println("HR " + hastingsRatio);
+        //Log.warning("part 2 " + stdev + " -> " + new_stdev);
+        
+
+        //System.out.println("HR " + hastingsRatio + " " + this.usingRates);
 
         return hastingsRatio;
     }
 
+	
+	
     private double getRateQuantiles (double r) {
         try {
             return LN.cumulativeProbability(r);
