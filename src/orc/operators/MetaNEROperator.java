@@ -106,6 +106,10 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 
 		this.tree =  treeInput.get();
 
+		if (tree.getNodeCount() == 3 && (tree.getRoot()).isFake()) {
+            return Double.NEGATIVE_INFINITY;
+        }
+
 		// Get nodes which operator may apply to
         final List<Node> applicableNodesBeforeOperation = getApplicableNodes(this.tree);
         if (applicableNodesBeforeOperation.size() == 0) return Double.NEGATIVE_INFINITY;
@@ -128,8 +132,8 @@ public class MetaNEROperator extends InConstantDistanceOperator {
         }
 
 
-        // Tree with dated tips
-        if (D.isLeaf()) {
+        // Tree with dated tips or sampled ancestors
+        if (D.isLeaf() || D.isFake()) {
             return Double.NEGATIVE_INFINITY;
         }
 
@@ -281,7 +285,7 @@ public class MetaNEROperator extends InConstantDistanceOperator {
         	Node E = tree.getNode(i);
 
         	// Ensure that at least 1 child is not a leaf
-        	if (E.getChildCount() == 2 && (!E.getChild(0).isLeaf() || !E.getChild(1).isLeaf())) {
+        	if (!E.isFake() && E.getChildCount() == 2 && (!E.getChild(0).isLeaf() || !E.getChild(1).isLeaf())) {
         		nodes.add(E);
         	}
 
