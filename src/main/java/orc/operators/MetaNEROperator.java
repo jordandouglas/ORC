@@ -9,18 +9,19 @@ import java.util.List;
 import beast.base.core.BEASTInterface;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.NonNegativeReal;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.inference.distribution.ScalarDistribution;
+import beast.base.spec.inference.distribution.TensorDistribution;
+import beast.base.spec.inference.parameter.RealScalarParam;
+import beast.base.spec.inference.parameter.RealVectorParam;
+import beast.base.spec.type.RealScalar;
 import beast.base.evolution.operator.Exchange;
 import beast.base.inference.operator.kernel.KernelDistribution;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.Tree;
-import beast.base.inference.distribution.LogNormalDistributionModel;
-import beast.base.inference.distribution.ParametricDistribution;
 import beast.base.util.Randomizer;
-import beastfx.app.inputeditor.BeautiDoc;
-import orc.consoperators.ConsOperatorUtils;
 import orc.consoperators.InConstantDistanceOperator;
-import orc.consoperators.PiecewiseLinearDistribution;
 
 
 /**
@@ -31,7 +32,7 @@ import orc.consoperators.PiecewiseLinearDistribution;
 public class MetaNEROperator extends InConstantDistanceOperator {
 
 
-	public final Input<ParametricDistribution> distributionInput = new Input<>("distr", "Rate distribution. Required if using the quantile parameterisation.");
+	public final Input<ScalarDistribution<RealScalar<PositiveReal>, Double>> distributionInput = new Input<>("distr", "Rate distribution. Required if using the quantile parameterisation.");
 	public final Input<Boolean> optimiseInput = new Input<>("optimize", "Whether to optimise the tunable parameter (default true)", true);
 
 
@@ -59,9 +60,9 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 
     // Inputs
     protected ClockMode clockMode;
-    protected RealParameter rates;
+    protected RealVectorParam<NonNegativeReal> rates;
     protected double twindowSize = 0;
-    protected ParametricDistribution rateDistribution;
+    protected TensorDistribution<RealScalarParam<NonNegativeReal>, Double> rateDistribution;
     protected Tree tree;
     protected KernelDistribution proposalKernel;
 
@@ -82,12 +83,12 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 			rates = rateInput.get();
 			clockMode = ClockMode.rates;
 		}else {
-			rates = quantileInput.get();
-			clockMode = ClockMode.quantiles;
-			rateDistribution = distributionInput.get();
-			if (rateDistribution == null) {
-				throw new IllegalArgumentException("Please specify the rate distribution 'distr' when using the quantile parameterisation");
-			}
+//			qualtiles = quantileInput.get();
+//			clockMode = ClockMode.quantiles;
+//			rateDistribution = distributionInput.get();
+//			if (rateDistribution == null) {
+//				throw new IllegalArgumentException("Please specify the rate distribution 'distr' when using the quantile parameterisation");
+//			}
 		}
 
 
@@ -164,10 +165,10 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 
 	            // Get node rates
 	        	try {
-		            double ra = rates.getValue(A.getNr()); // Free
-		            double rb = rates.getValue(B.getNr()); // Free
-		            double rc = rates.getValue(C.getNr()); // Free
-		            double rd = rates.getValue(D.getNr()); // Free
+		            double ra = rates.get(A.getNr()); // Free
+		            double rb = rates.get(B.getNr()); // Free
+		            double rc = rates.get(C.getNr()); // Free
+		            double rd = rates.get(D.getNr()); // Free
 		            
 		            // Can be overriden by an NER variant
 		            logJD = this.proposalRates(twindowSize, ta, tb, tc, td, te, ra, rb, rc, rd);
@@ -182,22 +183,22 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 	            break;
 
 	        }
-
-	        case quantiles: {
-
-	        	// Get node quantiles
-	            double qa = rates.getValue(A.getNr()); // Free
-	            double qb = rates.getValue(B.getNr()); // Free
-	            double qc = rates.getValue(C.getNr()); // Free
-	            double qd = rates.getValue(D.getNr()); // Free
-
-
-	            logJD = this.proposalQuantiles(twindowSize, ta, tb, tc, td, te, qa, qb, qc, qd);
-
-	            // Ensure that the constraints have not been broken
-	            if (!this.validateProposalQuantiles(ta, tb, tc, td, te)) return Double.NEGATIVE_INFINITY;
-	            break;
-	        }
+//
+//	        case quantiles: {
+//
+//	        	// Get node quantiles
+//	            double qa = rates.getValue(A.getNr()); // Free
+//	            double qb = rates.getValue(B.getNr()); // Free
+//	            double qc = rates.getValue(C.getNr()); // Free
+//	            double qd = rates.getValue(D.getNr()); // Free
+//
+//
+//	            logJD = this.proposalQuantiles(twindowSize, ta, tb, tc, td, te, qa, qb, qc, qd);
+//
+//	            // Ensure that the constraints have not been broken
+//	            if (!this.validateProposalQuantiles(ta, tb, tc, td, te)) return Double.NEGATIVE_INFINITY;
+//	            break;
+//	        }
 
         }
 
@@ -219,22 +220,22 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 	        case rates: {
 
 	            // Set the new rates
-	        	rates.setValue(A.getNr(), this.rap);
-	        	rates.setValue(B.getNr(), this.rbp);
-	        	rates.setValue(C.getNr(), this.rcp);
-	        	rates.setValue(D.getNr(), this.rdp);
+	        	rates.set(A.getNr(), this.rap);
+	        	rates.set(B.getNr(), this.rbp);
+	        	rates.set(C.getNr(), this.rcp);
+	        	rates.set(D.getNr(), this.rdp);
 	        	break;
 	        }
-	        case quantiles: {
-
-	        	// Set the new quantiles
-	        	rates.setValue(A.getNr(), this.qap);
-	        	rates.setValue(B.getNr(), this.qbp);
-	        	rates.setValue(C.getNr(), this.qcp);
-	        	rates.setValue(D.getNr(), this.qdp);
-	        	break;
-
-	        }
+//	        case quantiles: {
+//
+//	        	// Set the new quantiles
+//	        	rates.setValue(A.getNr(), this.qap);
+//	        	rates.setValue(B.getNr(), this.qbp);
+//	        	rates.setValue(C.getNr(), this.qcp);
+//	        	rates.setValue(D.getNr(), this.qdp);
+//	        	break;
+//
+//	        }
 
         }
 
@@ -364,48 +365,48 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 	 * @param qd - original quantile of node D
 	 * @return logJD - the natural logarithm of the determinant of the Jacobian
 	 */
-	protected double proposalQuantiles(double rWindowSize, double ta, double tb, double tc, double td, double te,
-			  double qa, double qb, double qc, double qd) {
-
-
-		double logJD = 0;
-		try {
-
-
-			// Convert quantiles to rates using the i-cdf
-			double ra = rateDistribution.inverseCumulativeProbability(qa);
-			double rb = rateDistribution.inverseCumulativeProbability(qb);
-			double rc = rateDistribution.inverseCumulativeProbability(qc);
-			double rd = rateDistribution.inverseCumulativeProbability(qd);
-
-
-			// Propose new rates + times
-			logJD = this.proposalRates(rWindowSize, ta,  tb,  tc, td, te, ra, rb, rc, rd);
-			if (logJD == Double.NEGATIVE_INFINITY) return logJD;
-
-
-			// Convert proposed rates into to proposed quantiles using the cdf
-			this.qap = rateDistribution.cumulativeProbability(this.rap);
-			this.qbp = rateDistribution.cumulativeProbability(this.rbp);
-			this.qcp = rateDistribution.cumulativeProbability(this.rcp);
-			this.qdp = rateDistribution.cumulativeProbability(this.rdp);
-
-
-			// Contribution of the cdf to the hastings ratio
-			if (this.qap != qa) logJD += getQuantileHastingsRatioContribution(this.rap, qa, this.qap);
-			if (this.qbp != qb) logJD += getQuantileHastingsRatioContribution(this.rbp, qb, this.qbp);
-			if (this.qcp != qc) logJD += getQuantileHastingsRatioContribution(this.rcp, qc, this.qcp);
-			if (this.qdp != qd) logJD += getQuantileHastingsRatioContribution(this.rdp, qd, this.qdp);
-
-
-		} catch (Exception e) {
-			return Double.NEGATIVE_INFINITY;
-		}
-
-		return logJD;
-
-
-	}
+//	protected double proposalQuantiles(double rWindowSize, double ta, double tb, double tc, double td, double te,
+//			  double qa, double qb, double qc, double qd) {
+//
+//
+//		double logJD = 0;
+//		try {
+//
+//
+//			// Convert quantiles to rates using the i-cdf
+//			double ra = rateDistribution.inverseCumulativeProbability(qa);
+//			double rb = rateDistribution.inverseCumulativeProbability(qb);
+//			double rc = rateDistribution.inverseCumulativeProbability(qc);
+//			double rd = rateDistribution.inverseCumulativeProbability(qd);
+//
+//
+//			// Propose new rates + times
+//			logJD = this.proposalRates(rWindowSize, ta,  tb,  tc, td, te, ra, rb, rc, rd);
+//			if (logJD == Double.NEGATIVE_INFINITY) return logJD;
+//
+//
+//			// Convert proposed rates into to proposed quantiles using the cdf
+//			this.qap = rateDistribution.cumulativeProbability(this.rap);
+//			this.qbp = rateDistribution.cumulativeProbability(this.rbp);
+//			this.qcp = rateDistribution.cumulativeProbability(this.rcp);
+//			this.qdp = rateDistribution.cumulativeProbability(this.rdp);
+//
+//
+//			// Contribution of the cdf to the hastings ratio
+//			if (this.qap != qa) logJD += getQuantileHastingsRatioContribution(this.rap, qa, this.qap);
+//			if (this.qbp != qb) logJD += getQuantileHastingsRatioContribution(this.rbp, qb, this.qbp);
+//			if (this.qcp != qc) logJD += getQuantileHastingsRatioContribution(this.rcp, qc, this.qcp);
+//			if (this.qdp != qd) logJD += getQuantileHastingsRatioContribution(this.rdp, qd, this.qdp);
+//
+//
+//		} catch (Exception e) {
+//			return Double.NEGATIVE_INFINITY;
+//		}
+//
+//		return logJD;
+//
+//
+//	}
 
 
 
@@ -417,26 +418,26 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 	 * @param qNew - the branch rate quantile after the proposal
 	 * @return
 	 */
-	protected double getQuantileHastingsRatioContribution(double rNew, double qOld, double qNew) {
-
-
-		double logHR = 0;
-		if (rateDistribution instanceof LogNormalDistributionModel) {
-			logHR = ConsOperatorUtils.getHRForLN(rNew, qOld, rateDistribution);
-        }
-
-        else if (rateDistribution instanceof PiecewiseLinearDistribution) {
-        	logHR = ConsOperatorUtils.getHRForPieceWise(rNew, qOld, qNew, rateDistribution);
-        }
-
-        else {
-        	logHR = ConsOperatorUtils.getHRUseNumericApproximation(rNew, qOld, rateDistribution);
-        }
-
-		return logHR;
-
-
-	}
+//	protected double getQuantileHastingsRatioContribution(double rNew, double qOld, double qNew) {
+//
+//
+//		double logHR = 0;
+//		if (rateDistribution instanceof LogNormalDistributionModel) {
+//			logHR = ConsOperatorUtils.getHRForLN(rNew, qOld, rateDistribution);
+//        }
+//
+//        else if (rateDistribution instanceof PiecewiseLinearDistribution) {
+//        	logHR = ConsOperatorUtils.getHRForPieceWise(rNew, qOld, qNew, rateDistribution);
+//        }
+//
+//        else {
+//        	logHR = ConsOperatorUtils.getHRUseNumericApproximation(rNew, qOld, rateDistribution);
+//        }
+//
+//		return logHR;
+//
+//
+//	}
 
 
 
@@ -492,70 +493,39 @@ public class MetaNEROperator extends InConstantDistanceOperator {
 	 * @param te - Height of node E
 	 * @return True if valid, false if invalid
 	 */
-	protected boolean validateProposalQuantiles(double ta, double tb, double tc, double td, double te) {
+//	protected boolean validateProposalQuantiles(double ta, double tb, double tc, double td, double te) {
+//
+//		if (this.tdp > te || this.tdp < tc || this.tdp < tb || this.tdp < ta) return false;
+//		if (this.qap <= 0 || this.qap >= 1) return false;
+//		if (this.qbp <= 0 || this.qbp >= 1) return false;
+//		if (this.qcp <= 0 || this.qcp >= 1) return false;
+//		if (this.qdp <= 0 || this.qdp >= 1) return false;
+//
+//
+//		// Ensure that proposed quantiles are not associated with rates which go outside the rate boundaries
+//		if (rateDistribution instanceof PiecewiseLinearDistribution) {
+//            PiecewiseLinearDistribution piecewise = (PiecewiseLinearDistribution) rateDistribution;
+//
+//            try {
+//
+//	            double rmin = piecewise.getRangeMin();
+//	            double rmax = piecewise.getRangeMax();
+//	            if (this.rap < rmin || this.rap > rmax) return false;
+//	            if (this.rbp < rmin || this.rbp > rmax) return false;
+//	            if (this.rcp < rmin || this.rcp > rmax) return false;
+//	            if (this.rdp < rmin || this.rdp > rmax) return false;
+//
+//            } catch (Exception e) {
+//            	e.printStackTrace();
+//            	return false;
+//            }
+//        }
+//
+//
+//		return true;
+//
+//	}
 
-		if (this.tdp > te || this.tdp < tc || this.tdp < tb || this.tdp < ta) return false;
-		if (this.qap <= 0 || this.qap >= 1) return false;
-		if (this.qbp <= 0 || this.qbp >= 1) return false;
-		if (this.qcp <= 0 || this.qcp >= 1) return false;
-		if (this.qdp <= 0 || this.qdp >= 1) return false;
-
-
-		// Ensure that proposed quantiles are not associated with rates which go outside the rate boundaries
-		if (rateDistribution instanceof PiecewiseLinearDistribution) {
-            PiecewiseLinearDistribution piecewise = (PiecewiseLinearDistribution) rateDistribution;
-
-            try {
-
-	            double rmin = piecewise.getRangeMin();
-	            double rmax = piecewise.getRangeMax();
-	            if (this.rap < rmin || this.rap > rmax) return false;
-	            if (this.rbp < rmin || this.rbp > rmax) return false;
-	            if (this.rcp < rmin || this.rcp > rmax) return false;
-	            if (this.rdp < rmin || this.rdp > rmax) return false;
-
-            } catch (Exception e) {
-            	e.printStackTrace();
-            	return false;
-            }
-        }
-
-
-		return true;
-
-	}
-
-
-	/**
-	 * Remove all narrow exchange operators from the beauti doc
-	 * @param doc
-	 * @return
-	 */
-    public static void customConnector(BeautiDoc doc) {
-
-    	try {
-
-	    	// Find and destroy the narrow exchanges
-	    	for (String str : doc.pluginmap.keySet()) {
-
-	    		BEASTInterface obj = doc.pluginmap.get(str);
-	    		if (obj instanceof Exchange) {
-
-	    			Exchange operator = (Exchange) obj;
-	    			if (operator.isNarrowInput.get()) {
-	    				operator.m_pWeight.set(0.0);
-	    			}
-
-
-	    		}
-
-	    	}
-
-    	} catch (Exception e) {
-
-		}
-
-    }
 
 
 

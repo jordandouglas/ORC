@@ -1,14 +1,10 @@
-<package name='ORC' version='1.2.1'>
-	<depends on='BEAST.base' atleast='2.7.5'/>
-	<depends on='BEAST.app' atleast='2.7.5'/>
-	<depends on='BEASTLabs' atleast='2.0.0'/>
+<package name='ORC' version='1.3.0'>
+	<depends on='BEAST.base' atleast='2.8.0'/>
 
 	<service type="beast.base.core.BEASTInterface">
 	    <provider classname="orc.consoperators.InConstantDistanceOperator"/>
 	    <provider classname="orc.consoperators.SmallPulley"/>
 	    <provider classname="orc.consoperators.SimpleDistance"/>
-	    <provider classname="orc.consoperators.UcldScalerOperator"/>
-	    <provider classname="orc.consoperators.PiecewiseLinearDistribution"/>
 	    <provider classname="orc.inference.TipRateLogger"/>
 	    <provider classname="orc.ner.NEROperator_dAB"/>
 	    <provider classname="orc.ner.NEROperator_dAB_dAC"/>
@@ -59,6 +55,8 @@
 	    <provider classname="orc.ner.NEROperator_dCE"/>
 	    <provider classname="orc.operators.MetaNEROperator"/>
 	    <provider classname="orc.operators.SampleFromPriorOperator"/>
+
+
 	</service>
 
 

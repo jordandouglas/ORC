@@ -4,21 +4,22 @@ package orc.consoperators;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import org.apache.commons.math.MathException;
 
 import beast.base.core.Citation;
 import beast.base.core.Description;
 import beast.base.core.Input;
-import beast.base.evolution.branchratemodel.UCRelaxedClockModel;
+import beast.base.spec.domain.NonNegativeReal;
+import beast.base.spec.domain.Real;
+import beast.base.spec.domain.UnitInterval;
+import beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel;
+import beast.base.spec.inference.distribution.ScalarDistribution;
+import beast.base.spec.inference.parameter.RealVectorParam;
+import beast.base.spec.type.RealScalar;
 import beast.base.evolution.operator.TreeOperator;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.Tree;
 import beast.base.inference.StateNode;
-import beast.base.inference.distribution.LogNormalDistributionModel;
-import beast.base.inference.distribution.ParametricDistribution;
 import beast.base.inference.operator.kernel.KernelDistribution;
-import beast.base.inference.parameter.CompoundRealParameter;
-import beast.base.inference.parameter.RealParameter;
 import beast.base.util.Randomizer;
 
 
@@ -40,8 +41,12 @@ public class InConstantDistanceOperator extends TreeOperator {
 	
     public final Input<Double> twindowSizeInput =
             new Input<>("twindowSize", "the size of the window when proposing new node time", Input.Validate.REQUIRED);
-    final public Input<RealParameter> rateInput = new Input<>("rates", "the rates associated with nodes in the tree for sampling of individual rates among branches.", Input.Validate.REQUIRED);
-    final public Input<RealParameter> quantileInput = new Input<>("quantiles", "the quantiles of each branch rate.", Input.Validate.XOR,rateInput);
+    final public Input<RealVectorParam<NonNegativeReal>> rateInput = new Input<>("rates", "the rates associated with nodes in the tree for sampling of individual rates among branches.", Input.Validate.REQUIRED);
+    
+    // Quantiles are no longer supported as of beast 2.8, until further testing is performed
+    //final public Input<RealVectorParam<UnitInterval>> quantileInput = new Input<>("quantiles", "the quantiles of each branch rate.", Input.Validate.XOR,rateInput);
+    
+    
     final public Input<UCRelaxedClockModel> clockModelInput = new Input<>("clockModel", "relaxed clock model used to deal with quantiles", Input.Validate.REQUIRED);
     final public Input<KernelDistribution> proposalKernelInput = new Input<>("kernel", "Proposal kernel for a random walk on the internal node height.");
     
@@ -55,8 +60,8 @@ public class InConstantDistanceOperator extends TreeOperator {
     
     private ChildInclusions include;
     private double twindowSize;
-    private RealParameter rates;
-    private RealParameter quantiles;
+    private RealVectorParam<NonNegativeReal> rates;
+    private RealVectorParam<UnitInterval> quantiles;
     private enum rateMode {
         quantiles,
         rates
@@ -67,7 +72,7 @@ public class InConstantDistanceOperator extends TreeOperator {
     public void initAndValidate() {
     	this.twindowSize = twindowSizeInput.get();
         if (rateInput.get() == null) {
-        	this.quantiles = quantileInput.get();
+        	//this.quantiles = quantileInput.get();
             this.mode = rateMode.quantiles;
         } else {
         	this.rates = rateInput.get();
@@ -80,7 +85,7 @@ public class InConstantDistanceOperator extends TreeOperator {
     @Override
     public double proposal() {
         final Tree tree = treeInput.get();
-        ParametricDistribution rateDistribution = clockModelInput.get().rateDistInput.get();
+        ScalarDistribution<RealScalar<Real>, Double> rateDistribution = clockModelInput.get().rateDistInput.get();
         int nodeCount = tree.getNodeCount(); //return the number of nodes in the tree
         int branchCount = nodeCount - 1; //the number of branches of the tree
 
@@ -136,21 +141,21 @@ public class InConstantDistanceOperator extends TreeOperator {
 
        switch (mode) {
            case rates: {
-               r_x = rates.getValue(nodeNr); // rate of branch above this node
-               r_j = rates.getValue(sonNr); // rate of branch above son
-               r_k = rates.getValue(dauNr); // rate of branch above daughter
+               r_x = rates.get(nodeNr); // rate of branch above this node
+               r_j = rates.get(sonNr); // rate of branch above son
+               r_k = rates.get(dauNr); // rate of branch above daughter
                break;
            }
 
            case quantiles: {
-               q_x = quantiles.getValue(nodeNr);
-               q_j = quantiles.getValue(sonNr);
-               q_k = quantiles.getValue(dauNr);
+               q_x = quantiles.get(nodeNr);
+               q_j = quantiles.get(sonNr);
+               q_k = quantiles.get(dauNr);
                try {
                    r_x = rateDistribution.inverseCumulativeProbability(q_x);
                    r_j = rateDistribution.inverseCumulativeProbability(q_j);
                    r_k = rateDistribution.inverseCumulativeProbability(q_k);
-               } catch (MathException e) {
+               } catch (Exception e) {
                    e.printStackTrace();
                    return Double.NEGATIVE_INFINITY;
                }
@@ -214,46 +219,46 @@ public class InConstantDistanceOperator extends TreeOperator {
         switch (mode) {
             case rates: {
                 // set rates directly
-                rates.setValue(nodeNr, r_x_);
-                rates.setValue(sonNr, r_j_);
-                rates.setValue(dauNr, r_k_);
+                rates.set(nodeNr, r_x_);
+                rates.set(sonNr, r_j_);
+                rates.set(dauNr, r_k_);
                 break;
             }
-
-            case quantiles: {
-                try {
-                    // reject rates if exceeding piecewise approximation's range
-                    if (rateDistribution instanceof PiecewiseLinearDistribution) {
-                        PiecewiseLinearDistribution piecewise = (PiecewiseLinearDistribution) rateDistribution;
-                        double rmin = piecewise.getRangeMin();
-                        double rmax = piecewise.getRangeMax();
-                        if (r_x_ <= rmin || r_x_ >= rmax) return Double.NEGATIVE_INFINITY;
-                        if (r_j_ <= rmin || r_j_ >= rmax) return Double.NEGATIVE_INFINITY;
-                        if (r_k_ <= rmin || r_k_ >= rmax) return Double.NEGATIVE_INFINITY;
-                    }
-
-                    // new quantiles of proposed rates
-                    q_x_ = rateDistribution.cumulativeProbability(r_x_);
-                    q_j_ = rateDistribution.cumulativeProbability(r_j_);
-                    q_k_ = rateDistribution.cumulativeProbability(r_k_);
-                    
-                    
-                    if (q_x_ <= 0 || q_x_ >= 1) return Double.NEGATIVE_INFINITY;
-                    if (q_j_ <= 0 || q_j_ >= 1) return Double.NEGATIVE_INFINITY;
-                    if (q_k_ <= 0 || q_k_ >= 1) return Double.NEGATIVE_INFINITY;
-
-                    // set quantiles
-                    quantiles.setValue(nodeNr, q_x_);
-                    quantiles.setValue(sonNr, q_j_);
-                    quantiles.setValue(dauNr, q_k_);
-
-
-                } catch (MathException e) {
-                    e.printStackTrace();
-                    return Double.NEGATIVE_INFINITY;
-                }
-                break;
-            }
+//
+//            case quantiles: {
+//                try {
+//                    // reject rates if exceeding piecewise approximation's range
+//                    if (rateDistribution instanceof PiecewiseLinearDistribution) {
+//                        PiecewiseLinearDistribution piecewise = (PiecewiseLinearDistribution) rateDistribution;
+//                        double rmin = piecewise.getRangeMin();
+//                        double rmax = piecewise.getRangeMax();
+//                        if (r_x_ <= rmin || r_x_ >= rmax) return Double.NEGATIVE_INFINITY;
+//                        if (r_j_ <= rmin || r_j_ >= rmax) return Double.NEGATIVE_INFINITY;
+//                        if (r_k_ <= rmin || r_k_ >= rmax) return Double.NEGATIVE_INFINITY;
+//                    }
+//
+//                    // new quantiles of proposed rates
+//                    q_x_ = rateDistribution.cumulativeProbability(r_x_);
+//                    q_j_ = rateDistribution.cumulativeProbability(r_j_);
+//                    q_k_ = rateDistribution.cumulativeProbability(r_k_);
+//                    
+//                    
+//                    if (q_x_ <= 0 || q_x_ >= 1) return Double.NEGATIVE_INFINITY;
+//                    if (q_j_ <= 0 || q_j_ >= 1) return Double.NEGATIVE_INFINITY;
+//                    if (q_k_ <= 0 || q_k_ >= 1) return Double.NEGATIVE_INFINITY;
+//
+//                    // set quantiles
+//                    quantiles.set(nodeNr, q_x_);
+//                    quantiles.set(sonNr, q_j_);
+//                    quantiles.set(dauNr, q_k_);
+//
+//
+//                } catch (MathException e) {
+//                    e.printStackTrace();
+//                    return Double.NEGATIVE_INFINITY;
+//                }
+//                break;
+//            }
 
             default: {
 
@@ -272,38 +277,38 @@ public class InConstantDistanceOperator extends TreeOperator {
 
                 break;
             }
-
-            case quantiles: {
-                if (rateDistribution instanceof CachedDistribution && ((CachedDistribution)rateDistribution).distrInput.get() instanceof LogNormalDistributionModel) {
-                    hastingsRatio += ConsOperatorUtils.getHRForLN(r_x_, q_x, ((CachedDistribution)rateDistribution).distrInput.get())
-                            + ConsOperatorUtils.getHRForLN(r_j_, q_j, ((CachedDistribution)rateDistribution).distrInput.get())
-                            + ConsOperatorUtils.getHRForLN(r_k_, q_k, ((CachedDistribution)rateDistribution).distrInput.get());
-                } else if (rateDistribution instanceof LogNormalDistributionModel) {
-                    hastingsRatio += ConsOperatorUtils.getHRForLN(r_x_, q_x, rateDistribution)
-                                  + ConsOperatorUtils.getHRForLN(r_j_, q_j, rateDistribution)
-                                  + ConsOperatorUtils.getHRForLN(r_k_, q_k, rateDistribution);
-                }
-
-                else if (rateDistribution instanceof PiecewiseLinearDistribution) {
-                    if (((PiecewiseLinearDistribution)rateDistribution).distrInput.get() instanceof LogNormalDistributionModel) {
-                        hastingsRatio += ConsOperatorUtils.getHRForLN(r_x_, q_x, ((PiecewiseLinearDistribution)rateDistribution).distrInput.get())
-                                + ConsOperatorUtils.getHRForLN(r_j_, q_j, ((PiecewiseLinearDistribution)rateDistribution).distrInput.get())
-                                + ConsOperatorUtils.getHRForLN(r_k_, q_k, ((PiecewiseLinearDistribution)rateDistribution).distrInput.get());
-                    } else {
-                    	hastingsRatio += ConsOperatorUtils.getHRForPieceWise(r_x_, q_x, q_x_, rateDistribution)
-                                  + ConsOperatorUtils.getHRForPieceWise(r_j_, q_j, q_j_, rateDistribution)
-                                  + ConsOperatorUtils.getHRForPieceWise(r_k_, q_k, q_k_, rateDistribution);
-                    }
-                }
-
-                else {
-                    hastingsRatio += ConsOperatorUtils.getHRUseNumericApproximation(r_x_, q_x, rateDistribution)
-                                  + ConsOperatorUtils.getHRUseNumericApproximation(r_j_, q_j, rateDistribution)
-                                  + ConsOperatorUtils.getHRUseNumericApproximation(r_k_, q_k, rateDistribution);
-                }
-
-                break;
-            }
+//
+//            case quantiles: {
+//                if (rateDistribution instanceof CachedDistribution && ((CachedDistribution)rateDistribution).distrInput.get() instanceof LogNormalDistributionModel) {
+//                    hastingsRatio += ConsOperatorUtils.getHRForLN(r_x_, q_x, ((CachedDistribution)rateDistribution).distrInput.get())
+//                            + ConsOperatorUtils.getHRForLN(r_j_, q_j, ((CachedDistribution)rateDistribution).distrInput.get())
+//                            + ConsOperatorUtils.getHRForLN(r_k_, q_k, ((CachedDistribution)rateDistribution).distrInput.get());
+//                } else if (rateDistribution instanceof LogNormalDistributionModel) {
+//                    hastingsRatio += ConsOperatorUtils.getHRForLN(r_x_, q_x, rateDistribution)
+//                                  + ConsOperatorUtils.getHRForLN(r_j_, q_j, rateDistribution)
+//                                  + ConsOperatorUtils.getHRForLN(r_k_, q_k, rateDistribution);
+//                }
+//
+//                else if (rateDistribution instanceof PiecewiseLinearDistribution) {
+//                    if (((PiecewiseLinearDistribution)rateDistribution).distrInput.get() instanceof LogNormalDistributionModel) {
+//                        hastingsRatio += ConsOperatorUtils.getHRForLN(r_x_, q_x, ((PiecewiseLinearDistribution)rateDistribution).distrInput.get())
+//                                + ConsOperatorUtils.getHRForLN(r_j_, q_j, ((PiecewiseLinearDistribution)rateDistribution).distrInput.get())
+//                                + ConsOperatorUtils.getHRForLN(r_k_, q_k, ((PiecewiseLinearDistribution)rateDistribution).distrInput.get());
+//                    } else {
+//                    	hastingsRatio += ConsOperatorUtils.getHRForPieceWise(r_x_, q_x, q_x_, rateDistribution)
+//                                  + ConsOperatorUtils.getHRForPieceWise(r_j_, q_j, q_j_, rateDistribution)
+//                                  + ConsOperatorUtils.getHRForPieceWise(r_k_, q_k, q_k_, rateDistribution);
+//                    }
+//                }
+//
+//                else {
+//                    hastingsRatio += ConsOperatorUtils.getHRUseNumericApproximation(r_x_, q_x, rateDistribution)
+//                                  + ConsOperatorUtils.getHRUseNumericApproximation(r_j_, q_j, rateDistribution)
+//                                  + ConsOperatorUtils.getHRUseNumericApproximation(r_k_, q_k, rateDistribution);
+//                }
+//
+//                break;
+//            }
 
             default: {
 
@@ -435,26 +440,7 @@ public class InConstantDistanceOperator extends TreeOperator {
     }
 
 
-    
-    @Override
-    public List<StateNode> listStateNodes() {
-    	List<StateNode> stateNodes = super.listStateNodes();
-    	boolean hasCompoundRealParameter = true;
-    	while (hasCompoundRealParameter) {
-    		hasCompoundRealParameter = false;
-        	for (int i = 0; i < stateNodes.size(); i++) {
-        		StateNode s = stateNodes.get(i);
-        		if (s instanceof CompoundRealParameter) {
-        			CompoundRealParameter c = (CompoundRealParameter) s;
-        			stateNodes.remove(i);
-        			stateNodes.addAll(c.parameterListInput.get());
-        			i--;
-        			hasCompoundRealParameter = true;
-        		}
-        	}
-    	}
-    	return stateNodes;
-    }
+
     
 }
 

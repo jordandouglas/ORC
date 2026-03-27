@@ -4,22 +4,23 @@ package orc.inference;
 import java.io.PrintStream;
 
 import beast.base.evolution.tree.Tree;
-import beast.base.inference.parameter.RealParameter;
-import beast.base.inference.parameter.IntegerParameter;
+import beast.base.spec.domain.NonNegativeInt;
+import beast.base.spec.domain.NonNegativeReal;
+import beast.base.spec.inference.parameter.IntVectorParam;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.evolution.branchratemodel.BranchRateModel;
 import beast.base.core.Input;
 import beast.base.core.Description;
-import beast.base.core.Function;
 import beast.base.core.Loggable;
 import beast.base.core.BEASTObject;
 
 
 @Description("Logs all rates associated with the leaves of a tree. Number of dimensions = number of taxa. If clock is specified then logger willlog actual rates instead of the parameter itself")
-public class TipRateLogger extends BEASTObject implements Loggable, Function
+public class TipRateLogger extends BEASTObject implements Loggable
 {
     public final Input<BranchRateModel> clockModelInput = new Input<>("clock", "Clock model for computing rates");
-    public final Input<IntegerParameter> ratesCategoriesInput = new Input<>("categories", "Vector of rate categories");
-    public final Input<RealParameter> ratesInput = new Input<>("rates", "Vector of rates/quantiles");
+    public final Input<IntVectorParam<NonNegativeInt>> ratesCategoriesInput = new Input<>("categories", "Vector of rate categories");
+    public final Input<RealVectorParam<NonNegativeReal>> ratesInput = new Input<>("rates", "Vector of rates/quantiles");
     public final Input<Tree> treeInput = new Input<>("tree", "tree for which the rates apply", Input.Validate.REQUIRED);
     
     
@@ -27,15 +28,15 @@ public class TipRateLogger extends BEASTObject implements Loggable, Function
     boolean usingCategories;
     private BranchRateModel clockModel;
     private Tree tree;
-    private IntegerParameter catRates;
-    private RealParameter realRates;
+    private IntVectorParam<NonNegativeInt> catRates;
+    private RealVectorParam<NonNegativeReal> realRates;
     private int ntaxa;
     
 
     
     public void initAndValidate() {
-        this.catRates = (IntegerParameter)this.ratesCategoriesInput.get();
-        this.realRates = (RealParameter)this.ratesInput.get();
+        this.catRates = (IntVectorParam<NonNegativeInt>)this.ratesCategoriesInput.get();
+        this.realRates = (RealVectorParam<NonNegativeReal>)this.ratesInput.get();
         this.clockModel = (BranchRateModel)this.clockModelInput.get();
         if (this.catRates == null && this.realRates == null && this.clockModel == null) {
             throw new IllegalArgumentException("Must specify categories or real/quantile rates or the clock model");
@@ -52,10 +53,10 @@ public class TipRateLogger extends BEASTObject implements Loggable, Function
                 array[i] = this.clockModel.getRateForBranch(this.tree.getNode(i));
             }
             else if (this.usingCategories) {
-                array[i] = this.catRates.getArrayValue(i);
+                array[i] = this.catRates.get(i);
             }
             else {
-                array[i] = this.realRates.getArrayValue(i);
+                array[i] = this.realRates.get(i);
             }
         }
         return array;
@@ -93,10 +94,10 @@ public class TipRateLogger extends BEASTObject implements Loggable, Function
                 d = this.clockModel.getRateForBranch(this.tree.getNode(i));
             }
             else if (this.usingCategories) {
-                d = this.catRates.getArrayValue(i);
+                d = this.catRates.get(i);
             }
             else {
-                d = this.realRates.getArrayValue(i);
+                d = this.realRates.get(i);
             }
             printStream.print(d + "\t");
         }

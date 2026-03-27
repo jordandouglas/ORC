@@ -16,7 +16,7 @@ Also see BEAST 2 [blog post](https://www.beast2.org/2020/12/15/ORC.html)
 
 
 
-The main branch of this repository is for BEAST 2.7. To see example sessions and code compatible with 2.6, please refer to the v2.6 branch.
+The main branch of this repository is for BEAST 2.8. To see example sessions and code compatible with 2.6 or 2.7, please refer to the respective branch.
 
 
 
@@ -78,7 +78,7 @@ Please note that these xml files are dependent on the 'FastRelaxedClockLogNormal
 
 To fix the starting tree, please refer to the [Fix starting tree](https://www.beast2.org/fix-starting-tree/) blog post. 
 
-If the optimised relaxed clock is also being used, then this operator also needs to be switched off: `id="ORCAdaptableOperatorSampler_NER.c..."`. This operator performs a narrow exchange topology operation, while also accounting for branch rates.
+If the optimised relaxed clock is also being used, then this operator also needs to be switched off: `id="ORCNER_dAE_dBE_dCE.c:caterpillars..."`. This operator performs a narrow exchange topology operation, while also accounting for branch rates.
 
 
 ## Citation

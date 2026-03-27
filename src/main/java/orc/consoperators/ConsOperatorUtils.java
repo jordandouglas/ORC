@@ -1,7 +1,6 @@
 package orc.consoperators;
 
-import org.apache.commons.math.MathException;
-import org.apache.commons.math3.util.FastMath;
+
 
 import beast.base.inference.distribution.ParametricDistribution;
 import beast.base.inference.distribution.LogNormalDistributionModel;
@@ -11,50 +10,30 @@ public class ConsOperatorUtils {
     final private static double SQRT2 = Math.sqrt(2.0);
     final static private double EPSILON = 1e-8;
 
-    public static double getHRForLN (double rNew, double qOld, ParametricDistribution distribution) {
-        double stdev = ((LogNormalDistributionModel) distribution).SParameterInput.get().getArrayValue();
-        double miu = - 0.5 * stdev * stdev;
 
-        double b = FastMath.log(rNew);
-        double c = 2 * stdev * stdev;
-        double x = b - miu;
-        double x_sq = x * x / c;
-        double rateHR = b + x_sq;
-
-        double a = erfInv(2 * qOld - 1);
-        double quantileHR = miu + SQRT2 * stdev * a + a * a;
-        return quantileHR - rateHR;
-    }
-
-    public static double getHRForPieceWise (double rNew, double qOld, double qNew, ParametricDistribution distribution) {
-        PiecewiseLinearDistribution pld = (PiecewiseLinearDistribution) distribution;
-        double logHR = Math.log(pld.getDerivativeAtQuantile(qOld));
-        logHR +=  Math.log(pld.getDerivativeAtQuantileInverse(rNew, qNew));
-        return logHR;
-    }
 
     public static double getHRUseNumericApproximation (double rNew, double qOld, ParametricDistribution distribution) {
         double logHR = 0;
         try {
             double r0 = distribution.inverseCumulativeProbability(qOld);
             double r0h = distribution.inverseCumulativeProbability(qOld + EPSILON);
-            logHR += FastMath.log((r0h - r0) / EPSILON);
+            logHR += Math.log((r0h - r0) / EPSILON);
 
             double q0 = distribution.cumulativeProbability(rNew);
             double q0h = distribution.cumulativeProbability(rNew + EPSILON);
             if (q0h != q0) {
-            	logHR += FastMath.log((q0h - q0) / EPSILON);
+            	logHR += Math.log((q0h - q0) / EPSILON);
             } else {
             	logHR = Double.POSITIVE_INFINITY;
             }
-        } catch (MathException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to compute inverse cumulative probability!");
         }
         return -logHR;
     }
 
     public static double erfInv(final double x) {
-        double w = - FastMath.log((1.0 - x) * (1.0 + x));
+        double w = - Math.log((1.0 - x) * (1.0 + x));
         double p;
 
         if (w < 6.25) {
@@ -83,7 +62,7 @@ public class ConsOperatorUtils {
             p = 0.24015818242558961693 + p * w;
             p = 1.6536545626831027356 + p * w;
         } else if (w < 16.0) {
-            w = FastMath.sqrt(w) - 3.25;
+            w = Math.sqrt(w) - 3.25;
             p = 2.2137376921775787049e-09;
             p = 9.0756561938885390979e-08 + p * w;
             p = -2.7517406297064545428e-07 + p * w;
@@ -104,7 +83,7 @@ public class ConsOperatorUtils {
             p = 1.0052589676941592334 + p * w;
             p = 3.0838856104922207635 + p * w;
         } else if (!Double.isInfinite(w)) {
-            w = FastMath.sqrt(w) - 5.0;
+            w = Math.sqrt(w) - 5.0;
             p = -2.7109920616438573243e-11;
             p = -2.5556418169965252055e-10 + p * w;
             p = 1.5076572693500548083e-09 + p * w;
@@ -132,7 +111,7 @@ public class ConsOperatorUtils {
     public static double calculateHastingsRatio(double r, double q, double stdev) {
         double miu = - 0.5 * stdev * stdev; // miu of lognormal
         double a = ConsOperatorUtils.erfInv(2 * q - 1);
-        double b = FastMath.log(r);
+        double b = Math.log(r);
         double c = 2 * stdev * stdev;
         double x = b - miu;
         double x_sq = x * x / c;
