@@ -12,6 +12,7 @@
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.numberOfDiscreteRates,
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.rateQuantiles,
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.rates,
+                     beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.tree,
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.normalize,
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.rateCategories,
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.distr,
