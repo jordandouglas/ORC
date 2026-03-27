@@ -10,7 +10,6 @@
                      mainid='OptimisedRelaxedClock.c:$(n)'
                      suppressInputs='
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.numberOfDiscreteRates,
-                     beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.rateQuantiles,
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.rates,
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.tree,
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.normalize,
@@ -21,29 +20,35 @@
                  ORCucldMean/index/=Priors/ClockPrior/'>
             <![CDATA[
 
-				<branchRateModel id="OptimisedRelaxedClock.c:$(n)" spec="beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel" rates="@ORCRates.c:$(n)" tree="@Tree.t:$(n)">
+
+
+            <parameter id="ORCsigma.c:$(n)" name="stateNode" spec='beast.base.spec.inference.parameter.RealScalarParam' domain="PositiveReal">0.5</parameter>
+
+				<input id="OptimisedRelaxedClock.c:$(n)" spec="beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel" tree="@Tree.t:$(n)">
 					<distr idref="ORCRateLogNormal.c:$(n)" />
 					<parameter id="ORCucldMean.c:$(n)" estimate="false" name="clock.rate" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">1.0</parameter>
-				</branchRateModel>
+					<parameter spec='beast.base.spec.inference.parameter.RealVectorParam' domain="PositiveReal" name='rates' id='ORCRates.c:$(n)' value="1"/> 
+				</input>
 
 
-				<parameter id="ORCsigma.c:$(n)" name="stateNode" spec='beast.base.spec.inference.parameter.RealScalarParam' domain="PositiveReal">0.2</parameter>
-				<parameter id="ORCRates.c:$(n)" name="stateNode" spec='beast.base.spec.inference.parameter.RealVectorParam' domain="PositiveReal">0.5</parameter>
+
+				<distribution idref="prior">
+					<if cond='inlikelihood(OptimisedRelaxedClock.c:$(n))'>
 
 
-				<distribution id='ORCRatePriorDistribution.c:$(n)' spec='beast.base.spec.inference.distribution.IID' param='@ORCRates.c:$(n)' >
-					<distr id="ORCRateLogNormal.c:$(n)" spec="beast.base.spec.inference.distribution.LogNormal" meanInRealSpace="true" S="@ORCsigma.c:$(n)">
-						<M spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false">1</M>
-					</distr>
+						<distribution id="ORCsigmaPrior.c:$(n)" spec="beast.base.spec.inference.distribution.Gamma" param="@ORCsigma.c:$(n)">
+							<alpha spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="5" estimate='false'/> <!-- shape -->
+							<theta  spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="0.05" estimate='false'/> <!-- scale -->
+						</distribution>
+
+						<distribution id='ORCRatePriorDistribution.c:$(n)' spec='beast.base.spec.inference.distribution.IID' param='@ORCRates.c:$(n)' >
+							<distr id="ORCRateLogNormal.c:$(n)" spec="beast.base.spec.inference.distribution.LogNormal" meanInRealSpace="true" S="@ORCsigma.c:$(n)">
+								<M spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="1.0" estimate="false"/>
+							</distr>
+						</distribution>
+
+					</if>
 				</distribution>
-
-
-
-				<distribution id="ORCsigmaPrior.c:$(n)" spec="beast.base.spec.inference.distribution.Gamma" param="@ORCsigma.c:$(n)">
-					<alpha spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="5" estimate='false'/> <!-- shape -->
-					<theta  spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="0.05" estimate='false'/> <!-- scale -->
-				</distribution>
-
 
 				<distribution id="ORCucldMeanPrior.c:$(n)" spec="beast.base.spec.inference.distribution.Gamma" param="@ORCucldMean.c:$(n)">
 					<alpha spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="0.01" estimate='false'/> <!-- shape -->
@@ -136,17 +141,11 @@
             <connect srcID='ORCRatesStat.c:$(n)' targetID='tracelog' inputName='log' if='inlikelihood(ORCRates.c:$(n))'/>
 
 
-            <connect srcID='ORCsigmaPrior.c:$(n)' targetID='prior' inputName='distribution'
-                     if='inlikelihood(ORCsigma.c:$(n))'>Optimised lognormal relaxed clock stdev of partition c:$(n)
-            </connect>
             <connect srcID='ORCucldMeanPrior.c:$(n)' targetID='prior' inputName='distribution'
                      if='inlikelihood(ORCucldMean.c:$(n)) and inlikelihood(Tree.t:$(n)) and ORCucldMean.c:$(n)/estimate=true'>
 					Optimised lognormal relaxed clock mean of partition c:$(n)
             </connect>
-            <connect srcID='ORCRatePriorDistribution.c:$(n)' targetID='prior' inputName='distribution'
-                     if='inlikelihood(ORCRates.c:$(n)) and inlikelihood(Tree.t:$(n)) and ORCRates.c:$(n)/estimate=true'>
-					Optimised lognormal relaxed clock rates of partition c:$(n)
-            </connect>
+
 
 
             <connect srcID='OptimisedRelaxedClock.c:$(n)' targetID='TreeWithMetaDataLogger.t:$(n)' inputName='branchratemodel'
