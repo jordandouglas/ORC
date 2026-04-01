@@ -5,6 +5,9 @@
     <!-- Clock models -->
     <mergewith point='clockModelTemplates'>
 
+
+
+
           <!-- Optimised relaxed clock -->
         <subtemplate id='OptimisedRelaxedClock' class='beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel'
                      mainid='OptimisedRelaxedClock.c:$(n)'
@@ -15,7 +18,10 @@
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.normalize,
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.rateCategories,
                      beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.distr,
-                     beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.rateQuantiles'
+                     beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel.rateQuantiles,
+                     orc.distribution.BranchRatePrior.tree,
+                     orc.distribution.BranchRatePrior.sigma,
+                     orc.distribution.BranchRatePrior.param'
             hmc='OptimisedRelaxedClock/clock.rate/=StrictClock/clock.rate,
                  ORCucldMean/index/=Priors/ClockPrior/'>
             <![CDATA[
@@ -25,7 +31,7 @@
             <parameter id="ORCsigma.c:$(n)" name="stateNode" spec='beast.base.spec.inference.parameter.RealScalarParam' domain="PositiveReal">0.5</parameter>
 
 				<input id="OptimisedRelaxedClock.c:$(n)" spec="beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel" tree="@Tree.t:$(n)">
-					<distr idref="ORCRateLogNormal.c:$(n)" />
+					<distr id="ORCLogNormalDistribution.c:$(n)" spec="beast.base.spec.inference.distribution.LogNormal" meanInRealSpace="true" M="1" S="@ORCsigma.c:$(n)" />
 					<parameter id="ORCucldMean.c:$(n)" estimate="false" name="clock.rate" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">1.0</parameter>
 					<parameter spec='beast.base.spec.inference.parameter.RealVectorParam' domain="PositiveReal" name='rates' id='ORCRates.c:$(n)' value="1"/> 
 				</input>
@@ -41,11 +47,8 @@
 							<theta  spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="0.05" estimate='false'/> <!-- scale -->
 						</distribution>
 
-						<distribution id='ORCRatePriorDistribution.c:$(n)' spec='beast.base.spec.inference.distribution.IID' param='@ORCRates.c:$(n)' >
-							<distr id="ORCRateLogNormal.c:$(n)" spec="beast.base.spec.inference.distribution.LogNormal" meanInRealSpace="true" S="@ORCsigma.c:$(n)">
-								<M spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="1.0" estimate="false"/>
-							</distr>
-						</distribution>
+						 <distribution id='ORCRatePriorDistribution.c:$(n)' spec='orc.distribution.BranchRatePrior' param='@ORCRates.c:$(n)' tree="@Tree.t:$(n)" sigma="@ORCsigma.c:$(n)" />
+
 
 					</if>
 				</distribution>

@@ -40,6 +40,7 @@
         <beast.pkg.name>ORC</beast.pkg.name>
         <beast.pkg.version>1.3.0</beast.pkg.version>
         <javafx.version>25.0.2</javafx.version>
+        <commons-statistics.version>1.2</commons-statistics.version>
     </properties>
 
     <dependencies>
@@ -53,6 +54,14 @@
             <groupId>io.github.compevol</groupId>
             <artifactId>beast-base</artifactId>
             <version>${beast.version}</version>
+        </dependency>
+
+
+        <!-- Commons Statistics -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-statistics-distribution</artifactId>
+            <version>${commons-statistics.version}</version>
         </dependency>
 
 

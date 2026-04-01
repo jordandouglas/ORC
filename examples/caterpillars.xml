@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='Standard' beautistatus='' namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.base.evolution.alignment:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.tree.coalescent:beast.pkgmgmt:beast.base.core:beast.base.inference.util:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood" required="BEAST.base v2.8.0:ORC v1.3.0" version="2.8">
 
-
-    <!--
-        Caterpillar dataset from
-        Kawahara AY, Rubinoff D. Convergent evolution of morphology and habitat use in the explosive Hawaiian fancy case caterpillar radiation. Journal of Evolutionary Biology. 2013;26(8):1763–1773. pmid:23866031
-
-
-    -->
-
-
-
     <data
 id="caterpillars"
 spec="Alignment"
@@ -114,10 +104,8 @@ name="alignment">
                 </taxonset>
             </tree>
             <stateNode id="birthRate.t:caterpillars" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="1.0"/>
-            <stateNode id="ORCsigma.c:caterpillars" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="0.2"/>
-            <stateNode id="ORCRates.c:caterpillars" spec="beast.base.spec.inference.parameter.RealVectorParam" dimension="138" domain="PositiveReal">0.5</stateNode>
-            <stateNode id="kappa.s:caterpillars" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="2.0"/>
-            <stateNode id="freqParameter.s:caterpillars" spec="beast.base.spec.inference.parameter.SimplexParam" dimension="4" domain="UnitInterval">0.25 0.25 0.25 0.25</stateNode>
+            <stateNode id="ORCsigma.c:caterpillars" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="0.5"/>
+            <stateNode id="ORCRates.c:caterpillars" spec="beast.base.spec.inference.parameter.RealVectorParam" dimension="138" domain="PositiveReal">1.0</stateNode>
         </state>
         <init id="RandomTree.t:caterpillars" spec="RandomTree" estimate="false" initial="@Tree.t:caterpillars" taxa="@caterpillars">
             <populationModel id="ConstantPopulation0.t:caterpillars" spec="ConstantPopulation">
@@ -127,25 +115,14 @@ name="alignment">
         <distribution id="posterior" spec="CompoundDistribution">
             <distribution id="prior" spec="CompoundDistribution">
                 <distribution id="YuleModel.t:caterpillars" spec="beast.base.spec.evolution.speciation.YuleModel" birthDiffRate="@birthRate.t:caterpillars" tree="@Tree.t:caterpillars"/>
+                <distribution id="ORCRatePriorDistribution.c:caterpillars" spec="orc.distribution.BranchRatePrior" param="@ORCRates.c:caterpillars" sigma="@ORCsigma.c:caterpillars" tree="@Tree.t:caterpillars"/>
+                <distribution id="ORCsigmaPrior.c:caterpillars" spec="beast.base.spec.inference.distribution.Gamma" param="@ORCsigma.c:caterpillars">
+                    <alpha id="RealScalarParam.21" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="5.0"/>
+                    <theta id="RealScalarParam.22" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="0.05"/>
+                </distribution>
                 <distribution id="YuleBirthRatePrior.t:caterpillars" spec="beast.base.spec.inference.distribution.Gamma" param="@birthRate.t:caterpillars">
                     <alpha id="RealScalarParam.2" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real" estimate="false" value="0.01"/>
                     <theta id="RealScalarParam.3" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="100.0"/>
-                </distribution>
-                <distribution id="ORCsigmaPrior.c:caterpillars" spec="beast.base.spec.inference.distribution.Gamma" param="@ORCsigma.c:caterpillars">
-                    <alpha id="RealScalarParam.11" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="5.0"/>
-                    <theta id="RealScalarParam.12" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="0.05"/>
-                </distribution>
-                <distribution id="ORCRatePriorDistribution.c:caterpillars" spec="beast.base.spec.inference.distribution.IID" param="@ORCRates.c:caterpillars">
-                    <distr id="ORCRateLogNormal.c:caterpillars" spec="beast.base.spec.inference.distribution.LogNormal" S="@ORCsigma.c:caterpillars" meanInRealSpace="true">
-                        <M id="RealScalarParam.10" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="1.0"/>
-                    </distr>
-                </distribution>
-                <distribution id="KappaPrior.s:caterpillars" spec="beast.base.spec.inference.distribution.LogNormal" param="@kappa.s:caterpillars">
-                    <M id="RealScalarParam.15" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real" estimate="false" value="1.0"/>
-                    <S id="RealScalarParam.16" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="1.25"/>
-                </distribution>
-                <distribution id="FrequenciesPrior.s:caterpillars" spec="beast.base.spec.inference.distribution.Dirichlet" param="@freqParameter.s:caterpillars">
-                    <alpha id="RealVectorParam.0" spec="beast.base.spec.inference.parameter.RealVectorParam" dimension="4" domain="PositiveReal" estimate="false">4.0 4.0 4.0 4.0</alpha>
                 </distribution>
             </distribution>
             <distribution id="likelihood" spec="CompoundDistribution" useThreads="true">
@@ -154,11 +131,12 @@ name="alignment">
                         <mutationRate id="mutationRate.s:caterpillars" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="1.0"/>
                         <shape id="gammaShape.s:caterpillars" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="1.0"/>
                         <proportionInvariant id="proportionInvariant.s:caterpillars" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="UnitInterval" estimate="false"/>
-                        <substModel id="hky.s:caterpillars" spec="beast.base.spec.evolution.substitutionmodel.HKY" kappa="@kappa.s:caterpillars">
-                            <frequencies id="estimatedFreqs.s:caterpillars" spec="beast.base.spec.evolution.substitutionmodel.Frequencies" frequencies="@freqParameter.s:caterpillars"/>
-                        </substModel>
+                        <substModel id="JC69.s:caterpillars" spec="JukesCantor"/>
                     </siteModel>
-                    <branchRateModel id="OptimisedRelaxedClock.c:caterpillars" spec="beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel" distr="@ORCRateLogNormal.c:caterpillars" rates="@ORCRates.c:caterpillars" tree="@Tree.t:caterpillars">
+                    <branchRateModel id="OptimisedRelaxedClock.c:caterpillars" spec="beast.base.spec.evolution.branchratemodel.UCRelaxedClockModel" rates="@ORCRates.c:caterpillars" tree="@Tree.t:caterpillars">
+                        <distr id="ORCLogNormalDistribution.c:caterpillars" spec="beast.base.spec.inference.distribution.LogNormal" S="@ORCsigma.c:caterpillars" meanInRealSpace="true">
+                            <M id="RealScalarParam.18" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real" value="1.0"/>
+                        </distr>
                         <clock.rate id="ORCucldMean.c:caterpillars" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="1.0"/>
                     </branchRateModel>
                 </distribution>
@@ -177,7 +155,7 @@ name="alignment">
         <operator id="ORCAdaptableOperatorSampler_sigma.c:caterpillars" spec="beast.base.spec.evolution.operator.AdaptableOperatorSampler" weight="3.0">
             <parameter idref="ORCsigma.c:caterpillars"/>
             <operator id="ORCUcldStdevScale.c:caterpillars" spec="beast.base.spec.inference.operator.ScaleOperator" parameter="@ORCsigma.c:caterpillars" scaleFactor="0.5" upper="10.0" weight="1.0">
-                <kernelDistribution id="KernelDistribution$Bactrian.13" spec="operator.kernel.KernelDistribution$Bactrian"/>
+                <kernelDistribution id="KernelDistribution$Bactrian.23" spec="operator.kernel.KernelDistribution$Bactrian"/>
             </operator>
             <operator id="ORCSampleFromPriorOperator_sigma.c:caterpillars" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCsigma.c:caterpillars" prior="@ORCsigmaPrior.c:caterpillars" weight="1.0"/>
         </operator>
@@ -185,44 +163,24 @@ name="alignment">
             <parameter idref="ORCRates.c:caterpillars"/>
             <tree idref="Tree.t:caterpillars"/>
             <operator id="ORCRootOperator1.c:caterpillars" spec="orc.consoperators.SimpleDistance" clockModel="@OptimisedRelaxedClock.c:caterpillars" rates="@ORCRates.c:caterpillars" tree="@Tree.t:caterpillars" twindowSize="0.005" weight="1.0">
-                <kernel id="KernelDistribution$Bactrian.14" spec="operator.kernel.KernelDistribution$Bactrian"/>
+                <kernel id="KernelDistribution$Bactrian.24" spec="operator.kernel.KernelDistribution$Bactrian"/>
             </operator>
             <operator id="ORCRootOperator2.c:caterpillars" spec="orc.consoperators.SmallPulley" clockModel="@OptimisedRelaxedClock.c:caterpillars" dwindowSize="0.005" rates="@ORCRates.c:caterpillars" tree="@Tree.t:caterpillars" weight="1.0">
-                <kernel id="KernelDistribution$Bactrian.15" spec="operator.kernel.KernelDistribution$Bactrian"/>
+                <kernel id="KernelDistribution$Bactrian.25" spec="operator.kernel.KernelDistribution$Bactrian"/>
             </operator>
         </operator>
         <operator id="ORCAdaptableOperatorSampler_rates_internal.c:caterpillars" spec="beast.base.spec.evolution.operator.AdaptableOperatorSampler" weight="20.0">
             <parameter idref="ORCRates.c:caterpillars"/>
             <tree idref="Tree.t:caterpillars"/>
             <operator id="ORCInternalnodesOperator.c:caterpillars" spec="orc.consoperators.InConstantDistanceOperator" clockModel="@OptimisedRelaxedClock.c:caterpillars" rates="@ORCRates.c:caterpillars" tree="@Tree.t:caterpillars" twindowSize="0.005" weight="1.0">
-                <kernel id="KernelDistribution$Bactrian.16" spec="operator.kernel.KernelDistribution$Bactrian"/>
+                <kernel id="KernelDistribution$Bactrian.26" spec="operator.kernel.KernelDistribution$Bactrian"/>
             </operator>
             <operator id="ORCRatesScale.c:caterpillars" spec="beast.base.spec.inference.operator.ScaleOperator" parameter="@ORCRates.c:caterpillars" scaleFactor="0.5" upper="10.0" weight="1.0">
-                <kernelDistribution id="KernelDistribution$Bactrian.17" spec="operator.kernel.KernelDistribution$Bactrian"/>
+                <kernelDistribution id="KernelDistribution$Bactrian.27" spec="operator.kernel.KernelDistribution$Bactrian"/>
             </operator>
             <operator id="ORCSampleFromPriorOperator.rates.c:caterpillars" spec="orc.operators.SampleFromPriorOperator" parameter="@ORCRates.c:caterpillars" prior="@ORCRatePriorDistribution.c:caterpillars" weight="1.0"/>
         </operator>
         <operator id="ORCNER_dAE_dBE_dCE.c:caterpillars" spec="orc.ner.NEROperator_dAE_dBE_dCE" rates="@ORCRates.c:caterpillars" tree="@Tree.t:caterpillars" weight="5.0"/>
-        <operator id="KappaScaler.s:caterpillars" spec="beast.base.spec.evolution.operator.AdaptableOperatorSampler" weight="0.05">
-            <parameter idref="kappa.s:caterpillars"/>
-            <operator id="AVMNOperator.caterpillars" spec="beast.base.spec.evolution.operator.AdaptableVarianceMultivariateNormalOperator" allowNonsense="true" beta="0.05" burnin="400" initial="800" weight="0.1">
-                <transformations id="AVMNSumTransform.caterpillars" spec="beast.base.spec.inference.operator.Transform$LogConstrainedSumTransform">
-                    <f idref="freqParameter.s:caterpillars"/>
-                </transformations>
-                <transformations id="AVMNLogTransform.caterpillars" spec="beast.base.spec.inference.operator.Transform$LogTransform">
-                    <f idref="kappa.s:caterpillars"/>
-                </transformations>
-                <transformations id="AVMNNoTransform.caterpillars" spec="beast.base.spec.inference.operator.Transform$NoTransform"/>
-            </operator>
-            <operator id="KappaScalerX.s:caterpillars" spec="beast.base.spec.inference.operator.ScaleOperator" parameter="@kappa.s:caterpillars" scaleFactor="0.1" upper="10.0" weight="0.1"/>
-        </operator>
-        <operator id="FrequenciesExchanger.s:caterpillars" spec="beast.base.spec.evolution.operator.AdaptableOperatorSampler" weight="0.05">
-            <parameter idref="freqParameter.s:caterpillars"/>
-            <operator idref="AVMNOperator.caterpillars"/>
-            <operator id="FrequenciesExchangerX.s:caterpillars" spec="beast.base.spec.inference.operator.DeltaExchangeOperator" delta="0.01" weight="0.1">
-                <parameter idref="freqParameter.s:caterpillars"/>
-            </operator>
-        </operator>
         <logger id="tracelog" spec="Logger" fileName="$(filebase).log" logEvery="1000" model="@posterior" sanitiseHeaders="true" sort="smart">
             <log idref="posterior"/>
             <log idref="likelihood"/>
@@ -233,8 +191,6 @@ name="alignment">
             <log idref="birthRate.t:caterpillars"/>
             <log idref="ORCsigma.c:caterpillars"/>
             <log id="ORCRatesStat.c:caterpillars" spec="beast.base.evolution.RateStatistic" branchratemodel="@OptimisedRelaxedClock.c:caterpillars" tree="@Tree.t:caterpillars"/>
-            <log idref="kappa.s:caterpillars"/>
-            <log idref="freqParameter.s:caterpillars"/>
         </logger>
         <logger id="screenlog" spec="Logger" logEvery="1000">
             <log idref="posterior"/>

@@ -1,12 +1,14 @@
 open module orc {
     requires beast.pkgmgmt;
     requires beast.base;
+    requires org.apache.commons.statistics.distribution;
 
 
     exports orc.consoperators;
     exports orc.inference;
     exports orc.ner;
     exports orc.operators;
+    exports orc.distribution;
 
     provides beast.base.core.BEASTInterface with
         
@@ -14,6 +16,7 @@ open module orc {
         orc.consoperators.SmallPulley,
         orc.consoperators.SimpleDistance,
         orc.inference.TipRateLogger,
+        orc.distribution.BranchRatePrior,
         orc.ner.NEROperator_dAB,
         orc.ner.NEROperator_dAB_dAC,
         orc.ner.NEROperator_dAB_dAC_dAE,

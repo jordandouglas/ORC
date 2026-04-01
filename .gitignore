@@ -3,3 +3,5 @@
 .project
 /release/
 /target/
+/simulation/
+*.zip

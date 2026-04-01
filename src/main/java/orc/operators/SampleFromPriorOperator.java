@@ -6,21 +6,16 @@ import java.util.List;
 
 
 import beast.base.core.Input;
-import beast.base.core.Input.Validate;
 import beast.base.inference.Operator;
-import beast.base.inference.StateNode;
-import beast.base.spec.domain.Real;
 import beast.base.spec.inference.distribution.IID;
 import beast.base.spec.inference.distribution.ScalarDistribution;
 import beast.base.spec.inference.distribution.TensorDistribution;
 import beast.base.spec.inference.parameter.RealScalarParam;
 import beast.base.spec.inference.parameter.RealVectorParam;
-import beast.base.spec.type.RealScalar;
 import beast.base.spec.type.Tensor;
 import beast.base.core.Log;
-import beast.base.evolution.tree.Node;
-import beast.base.evolution.tree.Tree;
 import beast.base.util.Randomizer;
+import orc.distribution.BranchRatePrior;
 
 
 
@@ -71,12 +66,14 @@ public class SampleFromPriorOperator extends Operator {
     	}
     	
     	else if (parameter instanceof RealVectorParam) {
-    		if (!(prior instanceof IID)) {
+    		if (!(prior instanceof IID) && !(prior instanceof BranchRatePrior)) {
     			throw new IllegalArgumentException("Parameters must have an iid prior");
     		}
-    		IID<?,?,?> iid = (IID<?,?,?>) prior;
-    		if (!(iid.distInput.get() instanceof ScalarDistribution<?,?>)) {
-    			throw new IllegalArgumentException("IID's prior must be a Scalar distribution to match the parameter!");
+    		if (prior instanceof IID) {
+	    		IID<?,?,?> iid = (IID<?,?,?>) prior;
+	    		if (!(iid.distInput.get() instanceof ScalarDistribution<?,?>)) {
+	    			throw new IllegalArgumentException("IID's prior must be a Scalar distribution to match the parameter!");
+	    		}
     		}
     	}
 		
@@ -129,11 +126,18 @@ public class SampleFromPriorOperator extends Operator {
 		if (parameter instanceof RealScalarParam) {
 			RealScalarParam<?> param = (RealScalarParam<?>) parameter;
 			priorDist = (ScalarDistribution<?,?>) prior;
-		}else {
+		}else if (prior instanceof IID) {
 			RealVectorParam<?> param = (RealVectorParam<?>) parameter;
 			IID<?,?,?> iid = (IID<?,?,?>) prior;
 			priorDist = (ScalarDistribution<?,?>) iid.distInput.get();
+		}else {
+			RealVectorParam<?> param = (RealVectorParam<?>) parameter;
+			BranchRatePrior d = (BranchRatePrior) prior;
+			priorDist = d.getDist();
 		}
+		
+		
+		
 		
 		
 		

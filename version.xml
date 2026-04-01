@@ -6,6 +6,7 @@
 	    <provider classname="orc.consoperators.SmallPulley"/>
 	    <provider classname="orc.consoperators.SimpleDistance"/>
 	    <provider classname="orc.inference.TipRateLogger"/>
+	    <provider classname="orc.distribution.BranchRatePrior"/>
 	    <provider classname="orc.ner.NEROperator_dAB"/>
 	    <provider classname="orc.ner.NEROperator_dAB_dAC"/>
 	    <provider classname="orc.ner.NEROperator_dAB_dAC_dAE"/>
