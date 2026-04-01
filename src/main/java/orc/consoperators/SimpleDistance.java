@@ -146,12 +146,19 @@ public class SimpleDistance extends TreeOperator {
             return Double.NEGATIVE_INFINITY;
         }
 
-        // set the new time of root
-        node.setHeight(t_x + a);
+       
 
         //Step 4: propose new rates
         double r_j_ = r_j * (t_x - t_j) / (t_x_ - t_j);
         double r_k_ = r_k * (t_x - t_k) / (t_x_ - t_k);
+        
+        
+        if (r_j_ <= 0 || r_k_ <= 0) {
+        	return Double.NEGATIVE_INFINITY;
+        }
+        
+        // set the new time of root
+        node.setHeight(t_x + a);
 
         // set the proposed new rates
         switch (mode) {
