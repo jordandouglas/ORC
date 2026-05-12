@@ -31,7 +31,7 @@
         <connection>scm:git:git://github.com/jordandoulgas/ORC.git</connection>
         <developerConnection>scm:git:ssh://github.com:jordandouglas/ORC.git</developerConnection>
         <url>https://github.com/jordandouglas/ORC</url>
-    </scm>
+    </scm> 
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
