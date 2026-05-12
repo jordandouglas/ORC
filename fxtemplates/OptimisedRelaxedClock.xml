@@ -61,7 +61,7 @@
 
 
 				<operator id="ORCucldMeanScaler.c:$(n)" spec="beast.base.spec.inference.operator.ScaleOperator" parameter="@ORCucldMean.c:$(n)" scaleFactor="0.5" weight="3.0"/>
-				<operator id="ORC.UpDown.c:$(n)" spec="beast.base.inference.operator.kernel.BactrianUpDownOperator" scaleFactor="0.75" weight="3.0">
+				<operator id="ORC.UpDown.c:$(n)" spec="beast.base.spec.evolution.operator.UpDownOperator" scaleFactor="0.75" weight="3.0">
 				 	<up idref="ORCucldMean.c:$(n)"/>               
 	            <down idref="Tree.t:$(n)"/>
        		</operator>
