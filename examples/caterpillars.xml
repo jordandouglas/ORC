@@ -115,8 +115,8 @@ name="alignment">
             <stateNode id="ORCRates.c:caterpillars" spec="beast.base.spec.inference.parameter.RealVectorParam" dimension="138" domain="PositiveReal">1.0</stateNode>
         </state>
         <init id="RandomTree.t:caterpillars" spec="RandomTree" estimate="false" initial="@Tree.t:caterpillars" taxa="@caterpillars">
-            <populationModel id="ConstantPopulation0.t:caterpillars" spec="ConstantPopulation">
-                <parameter id="randomPopSize.t:caterpillars" spec="parameter.RealParameter" name="popSize">1.0</parameter>
+            <populationModel id="ConstantPopulation0.t:caterpillars" spec="beast.base.spec.evolution.tree.coalescent.ConstantPopulation">
+                <popSize id="randomPopSize.t:caterpillars" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="1.0"/>
             </populationModel>
         </init>
         <distribution id="posterior" spec="CompoundDistribution">
