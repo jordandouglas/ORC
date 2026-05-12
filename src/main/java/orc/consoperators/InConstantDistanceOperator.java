@@ -85,7 +85,7 @@ public class InConstantDistanceOperator extends TreeOperator {
     @Override
     public double proposal() {
         final Tree tree = treeInput.get();
-        ScalarDistribution<RealScalar<Real>, Double> rateDistribution = clockModelInput.get().rateDistInput.get();
+        ScalarDistribution<RealScalar<? extends NonNegativeReal>, Double> rateDistribution = clockModelInput.get().rateDistInput.get();
         int nodeCount = tree.getNodeCount(); //return the number of nodes in the tree
         int branchCount = nodeCount - 1; //the number of branches of the tree
 
